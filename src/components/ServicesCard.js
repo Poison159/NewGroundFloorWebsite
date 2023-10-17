@@ -4,15 +4,18 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { CardActionArea } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 
 
 export default function ServicesCard(props) {
+  const theme = useTheme();
+
   return (
-    <Card style={{paddingLeft:"20px"}}>
+    <Card>
       <CardActionArea>
         <CardMedia
           component="img"
-          height="250"
+          height={[theme.breakpoints.down("sm")] ? "100px" : "300px"}
           image={props.imgUrl}
           onClick={() => {alert("hello")}}
         />

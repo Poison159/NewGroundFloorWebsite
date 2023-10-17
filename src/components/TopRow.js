@@ -5,10 +5,22 @@ import CustomAccordion from './CustomAccordion';
 
 export default function Toprow() {
 
-  var items = [
-    {imgPath: "https://img.stackshare.io/service/11331/asp.net-core.png", title:".Net C#", description:"We use C# for our bacend"},
+  var appItems = [
+    {imgPath: "https://img.stackshare.io/service/11331/asp.net-core.png", title:".Net C#", description:"We use C# for our backend"},
     {imgPath: "https://th.bing.com/th/id/OIP.HLxLvGJV-6r8ZR8AK4F9KAHaEO?pid=ImgDet&rs=1", title:"React", description:"We use react for our frontend"},
     {imgPath: "https://cdn-images-1.medium.com/max/2400/1*FDNeKIUeUnf0XdqHmi7nsw.png", title:"Material ui", description:"We use material ui for our look and feel"}
+  ]
+
+  var webItems = [
+    {imgPath: "https://th.bing.com/th/id/OIP.MH2BhO8NKkBEcL7od69hUQHaHa?pid=ImgDet&w=600&h=600&rs=1", title:"Node JS", description:"We use Node js for our backend"},
+    {imgPath: "https://th.bing.com/th/id/OIP.CeWz1L1Ekvsg4XnopAtanAHaD4?pid=ImgDet&rs=1", title:"Typescript", description:"We use typescript as a scripting language"},
+    {imgPath: "https://th.bing.com/th/id/OIP.Mtw0eaSwwbB7D9-fFPVvcgHaDr?pid=ImgDet&rs=1", title:"Angular", description:"We use angular for our frontend"},
+  ]
+
+  var ananlyticsItems = [
+    {imgPath: "https://th.bing.com/th/id/R.b6eba8a871ac74329c23476c34956333?rik=HvzKZY4W2ZYtbw&pid=ImgRaw&r=0", title:"MySQL", description:"We use MySQL to store and query the data"},
+    {imgPath: "https://wallpapercave.com/wp/wp8583820.jpg", title:"Python", description:"We use python to shape and anylyze data"},
+    {imgPath: "https://th.bing.com/th/id/OIP.uPQgsdWJ0ccnA_j_tZjc9gHaIl?pid=ImgDet&rs=1", title:"Jupyter Notebooks", description:"We use Jupyter notebooks to visualize the data"},
   ]
 
   return (
@@ -20,7 +32,7 @@ export default function Toprow() {
           description="We make mobile apss"
           onClick={() => alert("Hello")}
         />
-        <CustomAccordion items={items}/>
+        <CustomAccordion items={appItems}/>
       </Grid>
       <Grid item xs={12} md={4} sm={12}>
         <ServicesCard
@@ -28,6 +40,7 @@ export default function Toprow() {
           title="Websites"
           description="We also make websites"
         />
+          <CustomAccordion items={webItems}/>
       </Grid>
       <Grid item xs={12} md={4} sm={12}>
         <ServicesCard
@@ -35,6 +48,7 @@ export default function Toprow() {
           title="Data Anylytics"
           description="We analyze data"
         />
+        <CustomAccordion items={ ananlyticsItems}/>
       </Grid>
     </Grid>
   )

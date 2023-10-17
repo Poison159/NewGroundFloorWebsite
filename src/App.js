@@ -13,6 +13,7 @@ function App() {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
+     
       <AppBar position="static">
         <Toolbar>
           <IconButton
@@ -30,8 +31,10 @@ function App() {
           <Button color="inherit">Request app</Button>
         </Toolbar>
       </AppBar>
-      <br />
-      <TopRow/>
+      <div style={{ paddingLeft: "20px", paddingRight: "20px" }}>
+        <br />
+        <TopRow />
+      </div>
     </Box>
   );
 }

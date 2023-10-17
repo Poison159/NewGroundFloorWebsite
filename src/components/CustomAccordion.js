@@ -19,8 +19,9 @@ export default function CustomAccordion(props) {
                     expandIcon={<ExpandMoreIcon />}
                     aria-controls="panel1a-content"
                     id="panel1a-header"
+                    style={{ paddingLeft: "20px", backgroundColor:"#EBECF0" }}
                 >
-                    <Typography style={{ paddingLeft: "20px" }}>Tech Stack</Typography>
+                    <Typography >Tech Stack</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
                     <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
