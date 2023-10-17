@@ -1,9 +1,14 @@
 
+import React, {useState} from 'react'
 import ServicesCard from './ServicesCard';
 import Grid from '@mui/material/Grid';
 import CustomAccordion from './CustomAccordion';
 
 export default function Toprow() {
+
+  var [expandedApps,setExpandedApps] = useState(false);
+  var [expandedWeb,setExpandedWeb] = useState(false);
+  var [expandedData,setExpandedData] = useState(false);
 
   var cardArray = [
     {
@@ -19,7 +24,7 @@ export default function Toprow() {
     {
       title: "Websites",
       imgPath: "https://cdn.dribbble.com/users/15692/screenshots/1361195/attachments/194237/Flat-Dashboard-UI-real-pix.jpg?compress=1&resize=768x576&vertical=top",
-      description: "We make mobile apps",
+      description: "We make websites",
       appItems: [
         { imgPath: "https://th.bing.com/th/id/OIP.MH2BhO8NKkBEcL7od69hUQHaHa?pid=ImgDet&w=600&h=600&rs=1", title: "Node JS", description: "We use Node js for our backend" },
         { imgPath: "https://th.bing.com/th/id/OIP.CeWz1L1Ekvsg4XnopAtanAHaD4?pid=ImgDet&rs=1", title: "Typescript", description: "We use typescript as a scripting language" },
@@ -29,7 +34,7 @@ export default function Toprow() {
     {
       title: "Analytics",
       imgPath: "https://th.bing.com/th/id/OIP.1hXL7NbhaoBHaUXd1kXQtAHaHT?pid=ImgDet&rs=1",
-      description: "We make mobile apps",
+      description: "We analyze data",
       appItems: [
         { imgPath: "https://th.bing.com/th/id/R.b6eba8a871ac74329c23476c34956333?rik=HvzKZY4W2ZYtbw&pid=ImgRaw&r=0", title: "MySQL", description: "We use MySQL to store & query data" },
         { imgPath: "https://wallpapercave.com/wp/wp8583820.jpg", title: "Python", description: "We use python to shape and anylyze data" },
@@ -37,6 +42,18 @@ export default function Toprow() {
       ]
     }
   ]
+
+  const toggleExpandedApps = () => {
+    setExpandedApps(!expandedApps);
+  }
+
+  const toggleExpandedWeb = () => {
+    setExpandedWeb(!expandedWeb);
+  }
+
+  const toggleExpandedData = () => {
+    setExpandedData(!expandedData);
+  }
 
   return (
     <Grid container spacing={2}>
@@ -47,9 +64,15 @@ export default function Toprow() {
               <ServicesCard
                 imgUrl={appCard.imgPath}
                 title={appCard.title}
+                expanded={appCard.title =="Apps" ? expandedApps : appCard.title == "Websites" ? expandedWeb : expandedData}
                 description={appCard.description}
               />
-              <CustomAccordion items={appCard.appItems} />
+              <CustomAccordion 
+              items={appCard.appItems} 
+              expanded={appCard.title =="Apps" ? expandedApps : appCard.title == "Websites" ? expandedWeb : expandedData}
+              toggleExpanded={
+                appCard.title =="Apps" ? toggleExpandedApps : appCard.title == "Websites" ? toggleExpandedWeb : toggleExpandedData
+              } />
             </>
           </Grid>
         ))

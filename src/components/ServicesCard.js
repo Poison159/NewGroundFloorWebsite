@@ -15,7 +15,7 @@ export default function ServicesCard(props) {
       <CardActionArea>
         <CardMedia
           component="img"
-          height={[theme.breakpoints.down("sm")] ? "100px" : "300px"}
+          height={props.expanded ? "100px" : "300px"}
           image={props.imgUrl}
           onClick={() => {alert("hello")}}
         />

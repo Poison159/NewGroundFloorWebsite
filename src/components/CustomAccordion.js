@@ -19,7 +19,8 @@ export default function CustomAccordion(props) {
                     expandIcon={<ExpandMoreIcon />}
                     aria-controls="panel1a-content"
                     id="panel1a-header"
-                    style={{ paddingLeft: "20px", backgroundColor:"#EBECF0" }}
+                    onClick={props.toggleExpanded}
+                    style={{ paddingLeft: "20px", backgroundColor:"#EBECF0", height:"5px" }}
                 >
                     <Typography >Tech Stack</Typography>
                 </AccordionSummary>
