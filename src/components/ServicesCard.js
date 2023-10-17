@@ -4,16 +4,17 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { CardActionArea } from '@mui/material';
-import {Accordion} from './Accordion';
+
 
 export default function ServicesCard(props) {
   return (
-    <Card style={{paddingLeft:"20px"}} sx={{ maxWidth: 345 }} onClick={() => {alert("hello")}}>
+    <Card style={{paddingLeft:"20px"}}>
       <CardActionArea>
         <CardMedia
           component="img"
-          height="140"
+          height="250"
           image={props.imgUrl}
+          onClick={() => {alert("hello")}}
         />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
@@ -23,7 +24,6 @@ export default function ServicesCard(props) {
             {props.description}
           </Typography>
         </CardContent>
-        <CustomAccordion/>
       </CardActionArea>
     </Card>
   );
