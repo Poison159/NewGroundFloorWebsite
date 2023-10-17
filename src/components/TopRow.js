@@ -41,8 +41,8 @@ export default function Toprow() {
   return (
     <Grid container spacing={2}>
       {
-        cardArray.map((appCard => (
-          <Grid item xs={12} md={4} sm={12}>
+        cardArray.map((appCard,index) => (
+          <Grid key={index} item xs={12} md={4} sm={12}>
             <>
               <ServicesCard
                 imgUrl={appCard.imgPath}
@@ -52,7 +52,7 @@ export default function Toprow() {
               <CustomAccordion items={appCard.appItems} />
             </>
           </Grid>
-        )))
+        ))
       }
     </Grid>
   )

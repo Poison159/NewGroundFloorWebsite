@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import './App.css';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -10,23 +10,20 @@ import MenuIcon from '@mui/icons-material/Menu';
 import TopRow from './components/TopRow';
 
 function App() {
+  var [isOpen, setIsOpen] = useState(false);
+
+  const toggleDrawer = (open) => {
+    setIsOpen(!open);
+  }
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-     
       <AppBar position="static">
         <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
-          >
-            <MenuIcon />
-          </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Groundfloor
+          <Button color="inherit">Groundfloor</Button>
+          <Button color="inherit">Projects</Button>
+          <Button color="inherit">Team</Button>
           </Typography>
           <Button color="inherit">Request app</Button>
         </Toolbar>

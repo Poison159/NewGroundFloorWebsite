@@ -26,8 +26,8 @@ export default function CustomAccordion(props) {
                 <AccordionDetails>
                     <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
                         {
-                            props.items.map((item) => (
-                                <>
+                            props.items.map((item,index) => (
+                                <div key={index}>
                                     <ListItem alignItems="flex-start">
                                         <ListItemAvatar>
                                             <Avatar alt="Remy Sharp" src={item.imgPath} />
@@ -49,7 +49,7 @@ export default function CustomAccordion(props) {
                                         />
                                     </ListItem>
                                     <Divider variant="inset" component="li" />
-                                </>
+                                </div>
                             ))
                         }
                     </List>
