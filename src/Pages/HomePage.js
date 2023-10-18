@@ -1,10 +1,10 @@
 
 import React, {useState} from 'react'
-import ServicesCard from './ServicesCard';
+import ServicesCard from '../components/ServicesCard';
 import Grid from '@mui/material/Grid';
-import CustomAccordion from './CustomAccordion';
+import CustomAccordion from '../components/CustomAccordion';
 
-export default function Toprow() {
+export default function HomePage() {
 
   var [expandedApps,setExpandedApps] = useState(false);
   var [expandedWeb,setExpandedWeb] = useState(false);
@@ -33,7 +33,7 @@ export default function Toprow() {
     },
     {
       title: "Analytics",
-      imgPath: "https://th.bing.com/th/id/OIP.1hXL7NbhaoBHaUXd1kXQtAHaHT?pid=ImgDet&rs=1",
+      imgPath: "https://compactequip.com/wp-content/uploads/2021/08/business.jpg",
       description: "We analyze data",
       appItems: [
         { imgPath: "https://th.bing.com/th/id/R.b6eba8a871ac74329c23476c34956333?rik=HvzKZY4W2ZYtbw&pid=ImgRaw&r=0", title: "MySQL", description: "We use MySQL to store & query data" },
