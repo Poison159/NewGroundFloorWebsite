@@ -6,9 +6,8 @@ import Team from './Pages/Team';
 const AppRouter = () => {
     return (
         <Routes>
+            <Route path="/Team" element={<Team />} />
             <Route path="/" element={<HomePage />}>
-                <Route index element={<HomePage />} />
-                <Route path="Team" element={<Team />} />
             </Route>
         </Routes>
     );

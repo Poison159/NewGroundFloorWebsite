@@ -5,14 +5,11 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import { BrowserRouter as Router, Routes,  } from 'react-router-dom';
 import AppRouter from './AppRouter';
 import { Link } from 'react-router-dom';
 
 function App() {
-
   return (
-    <Router>
       <Box sx={{ flexGrow: 1 }}>
         <AppBar position="static">
           <Toolbar>
@@ -29,8 +26,6 @@ function App() {
           <AppRouter />
         </div>
       </Box>
-    </Router>
-
   );
 }
 
