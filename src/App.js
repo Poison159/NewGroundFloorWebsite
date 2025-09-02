@@ -15,14 +15,11 @@ function App() {
           <Toolbar>
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
               <Button color="inherit" component={Link} to="/">Groundfloor</Button>
-              <Button color="inherit" component={Link} to="/Team">Team</Button>
-              <Button color="inherit">Projects</Button>
             </Typography>
-            <Button color="inherit">Request app</Button>
+            <Button color="inherit">Team</Button>
           </Toolbar>
         </AppBar>
-        <div style={{ paddingLeft: "20px", paddingRight: "20px" }}>
-          <br />
+        <div>
           <AppRouter />
         </div>
       </Box>
