@@ -1,6 +1,7 @@
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
+import Collapse from '@mui/material/Collapse';
 import Typography from '@mui/material/Typography';
 import { CardActionArea } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
@@ -25,11 +26,14 @@ export default function ServicesCard(props) {
   return (
     <Card style={{ margin: 10 }}>
       <CardActionArea onClick={handleClick}>
-        <CardMedia
-          component="img"
-          height={props.expanded ? "100px" : "380px"}
-          image={props.imgUrl}
-        />
+        <Collapse in={!props.expanded} collapsedSize={150}>
+          <CardMedia
+            component="img"
+            sx={{ width: "100%", height: 380, objectFit: "cover" }}
+            image={props.imgUrl}
+          />
+        </Collapse>
+
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
             {props.title}
