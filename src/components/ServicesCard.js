@@ -24,7 +24,7 @@ export default function ServicesCard(props) {
   };
 
   return (
-    <Card style={{ margin: 10 }}>
+    <Card style={{ margin: "10px"}}>
       <CardActionArea onClick={handleClick}>
         <Collapse in={!props.expanded} collapsedSize={150}>
           <CardMedia
