@@ -15,8 +15,8 @@ export default function ServicesCard(props) {
       img2: 'https://lh3.googleusercontent.com/pw/AP1GczPbrADrfO2dWyIQFdXOFSIwbLBFsoPCCBcowzg6rCTJRKmU0Kdgq67JDA-Ibvg7kK3ri57GCay4wwmh1KR1faiR-3fhjn6gnI38d4maXB_IIE8C26lhzGh9fthfDTiTqc3u_-3Kb6uDr_5fSlY1RWRJAw=w436-h945-s-no-gm?authuser=0',
       img3: 'https://lh3.googleusercontent.com/pw/AP1GczMq0BdNkRdYWmEx5swAB-aqykxH6VdVfUikxHmA7NDWNQPtTcSSXhYCNMeKYLd5NahpqwGbgno8up2ISTN5mVglfFYK-9HY__mKW6_bQ_LuHnNc5jU9GnV8fKk9Q8tBjBRI36fZnuxtRCdyghS_tK880w=w436-h945-s-no-gm?authuser=0',
       desc1: 'Events & locations near you',
-      desc2: 'Checkout cool activities you can do',
-      desc3: 'View reels to get a feel on the vibe'
+      desc2: 'Activities to do, around you',
+      desc3: 'Reels to get a feel of vibe'
     };
     const queryParams = new URLSearchParams(imageUrls).toString();
 
