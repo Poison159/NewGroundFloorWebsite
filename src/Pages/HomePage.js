@@ -1,14 +1,14 @@
 
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import ServicesCard from '../components/ServicesCard';
 import Grid from '@mui/material/Grid';
 import CustomAccordion from '../components/CustomAccordion';
 
 export default function HomePage() {
 
-  var [expandedApps,setExpandedApps] = useState(false);
-  var [expandedWeb,setExpandedWeb] = useState(false);
-  var [expandedData,setExpandedData] = useState(false);
+  var [expandedApps, setExpandedApps] = useState(false);
+  var [expandedWeb, setExpandedWeb] = useState(false);
+  var [expandedData, setExpandedData] = useState(false);
 
   var cardArray = [
     {
@@ -56,27 +56,37 @@ export default function HomePage() {
   }
 
   return (
-    <Grid container spacing={2}>
-      {
-        cardArray.map((appCard,index) => (
-          <Grid key={index} item xs={12} md={4} sm={12}>
-            <>
-              <ServicesCard
-                imgUrl={appCard.imgPath}
-                title={appCard.title}
-                expanded={appCard.title =="Apps" ? expandedApps : appCard.title == "Websites" ? expandedWeb : expandedData}
-                description={appCard.description}
-              />
-              <CustomAccordion 
-              items={appCard.appItems} 
-              expanded={appCard.title =="Apps" ? expandedApps : appCard.title == "Websites" ? expandedWeb : expandedData}
-              toggleExpanded={
-                appCard.title =="Apps" ? toggleExpandedApps : appCard.title == "Websites" ? toggleExpandedWeb : toggleExpandedData
-              } />
-            </>
-          </Grid>
-        ))
-      }
-    </Grid>
+    <div
+      style={{
+        minHeight: "100vh",
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', // blue → purple gradient
+        display: "flex",
+        padding: "40px 0"
+      }}
+    >
+      <Grid container spacing={2}>
+        {
+          cardArray.map((appCard, index) => (
+            <Grid key={index} item xs={12} md={4} sm={12}>
+              <>
+                <ServicesCard
+                  imgUrl={appCard.imgPath}
+                  title={appCard.title}
+                  expanded={appCard.title == "Apps" ? expandedApps : appCard.title == "Websites" ? expandedWeb : expandedData}
+                  description={appCard.description}
+                />
+                <CustomAccordion
+                  items={appCard.appItems}
+                  expanded={appCard.title == "Apps" ? expandedApps : appCard.title == "Websites" ? expandedWeb : expandedData}
+                  toggleExpanded={
+                    appCard.title == "Apps" ? toggleExpandedApps : appCard.title == "Websites" ? toggleExpandedWeb : toggleExpandedData
+                  } />
+              </>
+            </Grid>
+          ))
+        }
+      </Grid>
+    </div>
+
   )
 }

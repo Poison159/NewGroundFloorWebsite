@@ -1,5 +1,4 @@
-import React from 'react';
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import {Routes, Route } from "react-router-dom";
 import HomePage from './Pages/HomePage';
 import Team from './Pages/Team';
 import IPhoneMockupPage from './Pages/IphoneMockup';
