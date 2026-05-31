@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Grid, Container, Typography, Card, CardContent, Box } from '@mui/material';
+import { Grid, Container, Typography, Card, CardContent, Box, IconButton } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
-// Styled iPhone container
-const IPhoneContainer = styled(Box)(({ theme }) => ({
+const IPhoneContainer = styled(Box)(() => ({
   position: 'relative',
   width: '250px',
-  height: '550px', // Increased by 5% (500 * 1.05)
+  height: '520px',
   margin: '0 auto',
   background: '#000',
   borderRadius: '35px',
@@ -23,13 +23,14 @@ const IPhoneScreen = styled(Box)({
   borderRadius: '25px',
   overflow: 'hidden',
   position: 'relative',
-  backgroundSize: 'cover',
+  backgroundSize: 'contain',
   backgroundPosition: 'center',
   backgroundRepeat: 'no-repeat',
 });
 
 export default function IPhoneMockupPage() {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [images, setImages] = useState({
     phone1: 'https://via.placeholder.com/250x460/4CAF50/white?text=App+Screen+1',
     phone2: 'https://via.placeholder.com/250x460/2196F3/white?text=App+Screen+2',
@@ -42,7 +43,6 @@ export default function IPhoneMockupPage() {
   });
 
   useEffect(() => {
-    // Get image URLs from URL parameters
     const img1 = searchParams.get('img1');
     const img2 = searchParams.get('img2');
     const img3 = searchParams.get('img3');
@@ -64,13 +64,20 @@ export default function IPhoneMockupPage() {
   }, [searchParams]);
 
   return (
-    <Box sx={{
-      display: 'flex',
-      minHeight: '100vh',
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-    }}>
+    <Box sx={{ py: 4, position: 'relative' }}>
       <Container maxWidth="lg">
-        <Box textAlign="center" sx={{ mb: 2 }}>
+        <IconButton
+          onClick={() => navigate(-1)}
+          sx={{
+            color: 'white',
+            mb: 1,
+            '&:hover': { backgroundColor: 'rgba(255,255,255,0.1)' },
+          }}
+        >
+          <ArrowBackIcon />
+        </IconButton>
+
+        <Box textAlign="center" sx={{ mb: 3 }}>
           <Typography
             variant="h3"
             component="h1"
@@ -81,7 +88,7 @@ export default function IPhoneMockupPage() {
               mb: 1
             }}
           >
-            Envibe app
+            Envibe
           </Typography>
           <Typography
             variant="h5"
@@ -89,10 +96,11 @@ export default function IPhoneMockupPage() {
             sx={{
               color: 'rgba(255,255,255,0.9)',
               fontWeight: 300,
-              textShadow: '0 2px 4px rgba(0,0,0,0.2)'
+              textShadow: '0 2px 4px rgba(0,0,0,0.2)',
+              letterSpacing: 1,
             }}
           >
-            Find fun & interesting places around you
+            Discover local events, places, and things to do — curated for you
           </Typography>
         </Box>
 
@@ -106,13 +114,18 @@ export default function IPhoneMockupPage() {
                   background: 'rgba(255,255,255,0.1)',
                   backdropFilter: 'blur(10px)',
                   borderRadius: '20px',
-                  border: '1px solid rgba(255,255,255,0.2)'
+                  border: '1px solid rgba(255,255,255,0.2)',
+                  transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+                  '&:hover': {
+                    transform: 'translateY(-4px)',
+                    boxShadow: '0 12px 40px rgba(0,0,0,0.3)',
+                  },
                 }}
               >
                 <CardContent>
                   <IPhoneContainer>
                     <IPhoneScreen
-                      sx={{ backgroundImage: `url(${imageUrl})` }}
+                      sx={{ backgroundImage: `url('${imageUrl}')` }}
                     />
                   </IPhoneContainer>
 
@@ -131,6 +144,53 @@ export default function IPhoneMockupPage() {
             </Grid>
           ))}
         </Grid>
+
+        <Box textAlign="center" sx={{ mt: 6 }}>
+          <Typography
+            variant="h5"
+            sx={{
+              color: 'rgba(255,255,255,0.9)',
+              fontWeight: 300,
+              mb: 3,
+              letterSpacing: 1,
+            }}
+          >
+            Now available on the App Store and Google Play
+          </Typography>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              gap: 3,
+              flexWrap: 'wrap',
+            }}
+          >
+            <a
+              href="https://apps.apple.com/za/app/spotvibe/id6747991573"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Box
+                component="img"
+                src="/apple-app-store-badge.svg"
+                alt="Download on the App Store"
+                sx={{ height: 60, width: 'auto', transition: 'transform 0.2s', '&:hover': { transform: 'scale(1.05)' } }}
+              />
+            </a>
+            <a
+              href="https://play.google.com/store/apps/details?id=com.groundfloor.envibe&pli=1"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Box
+                component="img"
+                src="/google-play-badge.svg"
+                alt="Get it on Google Play"
+                sx={{ height: 60, width: 'auto', transition: 'transform 0.2s', '&:hover': { transform: 'scale(1.05)' } }}
+              />
+            </a>
+          </Box>
+        </Box>
       </Container>
     </Box>
   );

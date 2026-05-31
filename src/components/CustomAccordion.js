@@ -12,49 +12,67 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
 
 export default function CustomAccordion(props) {
-    return (
-        <Accordion style={{margin:10}}>
-            <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls="panel1a-content"
-                id="panel1a-header"
-                onClick={props.toggleExpanded}
-                style={{ paddingLeft: "20px",borderRadius:5, backgroundColor: "#EBECF0", height: "5px" }}
-            >
-                <Typography >Tech Stack</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-                <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-                    {
-                        props.items.map((item, index) => (
-                            <div key={index}>
-                                <ListItem alignItems="flex-start">
-                                    <ListItemAvatar>
-                                        <Avatar alt="Remy Sharp" src={item.imgPath} />
-                                    </ListItemAvatar>
-                                    <ListItemText
-                                        primary={item.title}
-                                        secondary={
-                                            <React.Fragment>
-                                                <Typography
-                                                    sx={{ display: 'inline' }}
-                                                    component="span"
-                                                    variant="body2"
-                                                    color="text.primary"
-                                                >
-                                                </Typography>
-                                                {item.description}
-                                            </React.Fragment>
-                                        }
-                                    />
-                                </ListItem>
-                                <Divider variant="inset" component="li" />
-                            </div>
-                        ))
-                    }
-                </List>
-            </AccordionDetails>
-        </Accordion>
-
-    );
+  return (
+    <Accordion
+      expanded={props.expanded}
+      onChange={props.toggleExpanded}
+      sx={{
+        margin: '0 10px 10px',
+        borderRadius: '12px !important',
+        '&:before': { display: 'none' },
+        bgcolor: '#1e1e1e',
+        boxShadow: props.expanded
+          ? '0 8px 24px rgba(102, 126, 234, 0.25)'
+          : '0 2px 8px rgba(0,0,0,0.08)',
+        transition: 'box-shadow 0.3s ease',
+      }}
+    >
+      <AccordionSummary
+        expandIcon={<ExpandMoreIcon />}
+        sx={{
+          px: 3,
+          py: 1,
+          borderRadius: 2,
+          background: props.expanded
+            ? 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+            : '#2a2a2a',
+          '& .MuiTypography-root': {
+            color: props.expanded ? 'white' : 'rgba(255,255,255,0.9)',
+            fontWeight: 500,
+          },
+          '& .MuiSvgIcon-root': {
+            color: props.expanded ? 'white' : 'rgba(255,255,255,0.7)',
+            transition: 'transform 0.3s ease',
+          },
+        }}
+      >
+        <Typography>{props.title || "Tech Stack"}</Typography>
+      </AccordionSummary>
+      <AccordionDetails sx={{ px: 0, pb: 0, bgcolor: '#1e1e1e' }}>
+        <List sx={{ width: '100%', bgcolor: '#1e1e1e' }}>
+          {
+            props.items.map((item, index) => (
+              <div key={index}>
+                <ListItem alignItems="flex-start">
+                  <ListItemAvatar>
+                    <Avatar
+                      alt={item.title}
+                      src={item.imgPath}
+                      sx={{ width: 40, height: 40 }}
+                    />
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary={item.title}
+                    secondary={item.description}
+                    sx={{ '& .MuiListItemText-primary': { color: 'rgba(255,255,255,0.9)' }, '& .MuiListItemText-secondary': { color: 'rgba(255,255,255,0.5)' } }}
+                  />
+                </ListItem>
+                <Divider variant="inset" component="li" />
+              </div>
+            ))
+          }
+        </List>
+      </AccordionDetails>
+    </Accordion>
+  );
 }
