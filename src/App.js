@@ -39,7 +39,7 @@ function App() {
                 fontSize: '1.1rem',
                 textTransform: 'none',
                 letterSpacing: 0.5,
-                color: '#0f0',
+                color: 'white',
               }}
             >
               Groundfloor
@@ -52,10 +52,13 @@ function App() {
             sx={{
               mx: 0.5,
               fontWeight: isActive('/Team') ? 700 : 400,
-              borderBottom: isActive('/Team') ? '2px solid #0f0' : '2px solid transparent',
+              borderBottom: isActive('/Team') ? '2px solid #667eea' : '2px solid transparent',
               borderRadius: 0,
               textTransform: 'none',
-              color: isActive('/Team') ? '#0f0' : '#aaa',
+              ...(isActive('/Team')
+                ? { background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }
+                : { color: '#aaa' }
+              ),
             }}
           >
             Team
@@ -67,10 +70,13 @@ function App() {
             sx={{
               mx: 0.5,
               fontWeight: isActive('/Privacy Policy') ? 700 : 400,
-              borderBottom: isActive('/Privacy Policy') ? '2px solid #0f0' : '2px solid transparent',
+              borderBottom: isActive('/Privacy Policy') ? '2px solid #667eea' : '2px solid transparent',
               borderRadius: 0,
               textTransform: 'none',
-              color: isActive('/Privacy Policy') ? '#0f0' : '#aaa',
+              ...(isActive('/Privacy Policy')
+                ? { background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }
+                : { color: '#aaa' }
+              ),
             }}
           >
             Terms

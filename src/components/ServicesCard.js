@@ -78,14 +78,19 @@ export default function ServicesCard(props) {
               size="small"
               variant="outlined"
               sx={{
-                color: '#0f0',
-                borderColor: '#0f0',
+                borderColor: '#667eea',
                 textTransform: 'none',
                 fontWeight: 600,
                 borderRadius: 2,
+                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
                 '&:hover': {
-                  borderColor: '#0f0',
-                  background: 'rgba(0,255,0,0.1)',
+                  borderColor: '#667eea',
+                  background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  boxShadow: 'inset 0 0 0 999px rgba(102,126,234,0.1)',
                 },
               }}
             >

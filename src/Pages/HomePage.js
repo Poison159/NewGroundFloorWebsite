@@ -8,6 +8,9 @@ export default function HomePage() {
   const [expandedApps, setExpandedApps] = useState(false);
   const [expandedWeb, setExpandedWeb] = useState(false);
   const [expandedData, setExpandedData] = useState(false);
+  const [expandedPricingApps, setExpandedPricingApps] = useState(false);
+  const [expandedPricingWeb, setExpandedPricingWeb] = useState(false);
+  const [expandedPricingAnalytics, setExpandedPricingAnalytics] = useState(false);
 
   const cardArray = [
     {
@@ -45,6 +48,27 @@ export default function HomePage() {
   const toggleExpandedApps = () => setExpandedApps(!expandedApps);
   const toggleExpandedWeb = () => setExpandedWeb(!expandedWeb);
   const toggleExpandedData = () => setExpandedData(!expandedData);
+
+  const toggleExpandedPricingApps = () => setExpandedPricingApps(!expandedPricingApps);
+  const toggleExpandedPricingWeb = () => setExpandedPricingWeb(!expandedPricingWeb);
+  const toggleExpandedPricingAnalytics = () => setExpandedPricingAnalytics(!expandedPricingAnalytics);
+
+  const appsPricingItems = [
+    { title: "Notifications", price: "R1 000", description: "Push notifications, in-app alerts, and email reminders to keep your users engaged with real-time updates on events, messages, and personalised recommendations." },
+    { title: "Admin app", price: "R2 000", description: "A companion admin panel for managing users, moderating content, viewing analytics, and controlling app settings — all from a single secure dashboard." },
+    { title: "New features", price: "R1 000", description: "Extend your app with additional functionality — new screens, interactive components, API integrations, and custom features tailored to your needs." }
+  ];
+
+  const websitePricingItems = [
+    { title: "Static web", price: "R800", description: "No requests to a backend — purely static images, HTML, and assets. Ideal for brochure sites and landing pages with no dynamic logic required." },
+    { title: "Dynamic Web", price: "R4 000", description: "Full website with a backend, HTTP request handling, database integration, and dynamic content. Supports user authentication, forms, and third-party integrations." },
+    { title: "New features", price: "R1 000", description: "Extend your website with additional functionality — new pages, interactive components, API integrations, and custom features tailored to your needs." }
+  ];
+
+  const analyticsPricingItems = [
+    { title: "Custom dashboards", price: "R1 500", description: "Tailored analytics dashboards with real-time metrics, custom KPIs, and visual reports specific to your business needs." },
+    { title: "Data integration", price: "R2 000", description: "Connect your existing systems and data sources into a unified analytics pipeline for comprehensive business intelligence." }
+  ];
 
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
@@ -140,11 +164,11 @@ export default function HomePage() {
             <Grid item xs={12} md={4}>
               <Card
                 sx={{
-                  height: '100%',
                   background: 'rgba(255,255,255,0.05)',
                   backdropFilter: 'blur(12px)',
                   border: '1px solid rgba(255,255,255,0.1)',
                   borderRadius: 4,
+                  mb: 2,
                   transition: 'transform 0.3s ease, box-shadow 0.3s ease',
                   '&:hover': {
                     transform: 'translateY(-8px)',
@@ -153,8 +177,8 @@ export default function HomePage() {
                 }}
               >
                 <CardContent sx={{ p: 4, textAlign: 'center' }}>
-                  <Typography variant="h4" sx={{ color: '#0f0', fontWeight: 700, mb: 1 }}>
-                    R5 000
+                  <Typography variant="h4" sx={{ color: 'white', fontWeight: 700, mb: 1 }}>
+                    Starts @ R5 000
                   </Typography>
                   <Typography variant="h5" sx={{ color: 'white', fontWeight: 600, mb: 2 }}>
                     Mobile Apps
@@ -165,16 +189,22 @@ export default function HomePage() {
                   </Typography>
                 </CardContent>
               </Card>
+              <CustomAccordion
+                items={appsPricingItems}
+                title="Add-on Features"
+                expanded={expandedPricingApps}
+                toggleExpanded={toggleExpandedPricingApps}
+              />
             </Grid>
 
             <Grid item xs={12} md={4}>
               <Card
                 sx={{
-                  height: '100%',
                   background: 'rgba(255,255,255,0.05)',
                   backdropFilter: 'blur(12px)',
                   border: '1px solid rgba(255,255,255,0.1)',
                   borderRadius: 4,
+                  mb: 2,
                   transition: 'transform 0.3s ease, box-shadow 0.3s ease',
                   '&:hover': {
                     transform: 'translateY(-8px)',
@@ -183,8 +213,8 @@ export default function HomePage() {
                 }}
               >
                 <CardContent sx={{ p: 4, textAlign: 'center' }}>
-                  <Typography variant="h4" sx={{ color: '#0f0', fontWeight: 700, mb: 1 }}>
-                    R800
+                  <Typography variant="h4" sx={{ color: 'white', fontWeight: 700, mb: 1 }}>
+                    Starts @ R800
                   </Typography>
                   <Typography variant="h5" sx={{ color: 'white', fontWeight: 600, mb: 2 }}>
                     Websites
@@ -196,16 +226,22 @@ export default function HomePage() {
                   </Typography>
                 </CardContent>
               </Card>
+              <CustomAccordion
+                items={websitePricingItems}
+                title="Add-on Features"
+                expanded={expandedPricingWeb}
+                toggleExpanded={toggleExpandedPricingWeb}
+              />
             </Grid>
 
             <Grid item xs={12} md={4}>
               <Card
                 sx={{
-                  height: '100%',
                   background: 'rgba(255,255,255,0.05)',
                   backdropFilter: 'blur(12px)',
                   border: '1px solid rgba(255,255,255,0.1)',
                   borderRadius: 4,
+                  mb: 2,
                   transition: 'transform 0.3s ease, box-shadow 0.3s ease',
                   '&:hover': {
                     transform: 'translateY(-8px)',
@@ -214,8 +250,8 @@ export default function HomePage() {
                 }}
               >
                 <CardContent sx={{ p: 4, textAlign: 'center' }}>
-                  <Typography variant="h4" sx={{ color: '#0f0', fontWeight: 700, mb: 1 }}>
-                    R1 000
+                  <Typography variant="h4" sx={{ color: 'white', fontWeight: 700, mb: 1 }}>
+                    Starts @ R1 000
                   </Typography>
                   <Typography variant="h5" sx={{ color: 'white', fontWeight: 600, mb: 2 }}>
                     Analytics
@@ -227,6 +263,12 @@ export default function HomePage() {
                   </Typography>
                 </CardContent>
               </Card>
+              <CustomAccordion
+                items={analyticsPricingItems}
+                title="Add-on Features"
+                expanded={expandedPricingAnalytics}
+                toggleExpanded={toggleExpandedPricingAnalytics}
+              />
             </Grid>
           </Grid>
 

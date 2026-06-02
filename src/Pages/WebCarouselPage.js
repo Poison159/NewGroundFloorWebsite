@@ -3,22 +3,11 @@ import { Container, Typography, Box, IconButton } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import CloseIcon from '@mui/icons-material/Close';
 import { useNavigate } from 'react-router-dom';
 import ImageModal from '../components/ImageModal';
 
 const projects = [
-  {
-    name: 'Admin Dashboard',
-    url: 'https://spotvibe-admin.groundfloor.africa/events',
-    description: 'A powerful admin panel for managing business operations, users, and analytics in real-time.',
-    images: [
-      '/images/web_admin_1.png',
-      '/images/web_admin_2.png',
-      '/images/web_admin_3.png',
-      '/images/web_admin_4.png',
-      '/images/web_admin_5.png',
-    ],
-  },
   {
     name: 'User Profile',
     url: 'https://siyaportforlio.web.app/#projects',
@@ -29,6 +18,18 @@ const projects = [
       '/images/web_profile_3.png',
       '/images/web_profile_4.png',
       '/images/web_profile_5.png',
+    ],
+  },
+  {
+    name: 'Envibe Web',
+    url: 'https://spotvibe-admin.groundfloor.africa/events',
+    description: 'A powerful admin panel for managing business operations, users, and analytics in real-time.',
+    images: [
+      '/images/web_admin_1.png',
+      '/images/web_admin_2.png',
+      '/images/web_admin_3.png',
+      '/images/web_admin_4.png',
+      '/images/web_admin_5.png',
     ],
   },
 ];
@@ -205,6 +206,7 @@ function SwipeDeck({ images }) {
 export default function WebCarouselPage() {
   const navigate = useNavigate();
   const [projectIndex, setProjectIndex] = useState(0);
+  const [iframeUrl, setIframeUrl] = useState(null);
 
   const project = projects[projectIndex];
 
@@ -231,10 +233,13 @@ export default function WebCarouselPage() {
               {project.description}
             </Typography>
             <Box
-              component="a"
-              href={project.url}
-              target="_blank"
-              rel="noopener noreferrer"
+              onClick={() => {
+                if (project.name === 'Envibe Web') {
+                  window.open(project.url, '_blank', 'noopener,noreferrer');
+                } else {
+                  setIframeUrl(project.url);
+                }
+              }}
               sx={{
                 display: 'inline-block',
                 mt: 1.5,
@@ -245,7 +250,7 @@ export default function WebCarouselPage() {
                 color: 'white',
                 fontWeight: 600,
                 fontSize: '0.9rem',
-                textDecoration: 'none',
+                cursor: 'pointer',
                 transition: 'transform 0.2s, box-shadow 0.2s',
                 '&:hover': {
                   transform: 'translateY(-2px)',
@@ -279,6 +284,43 @@ export default function WebCarouselPage() {
           ))}
         </Box>
       </Container>
+
+      {iframeUrl && (
+        <Box
+          sx={{
+            position: 'fixed', inset: 0, zIndex: 9999,
+            background: 'rgba(0,0,0,0.92)',
+            display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+          }}
+          onClick={() => setIframeUrl(null)}
+        >
+          <Box
+            sx={{ position: 'relative', width: '95vw', height: '90vh', p: 2 }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <IconButton
+              onClick={() => setIframeUrl(null)}
+              sx={{
+                position: 'absolute', top: 4, right: -16, zIndex: 10000,
+                color: 'white', background: 'rgba(0,0,0,0.6)',
+                border: '2px solid white',
+                '&:hover': { background: 'rgba(255,255,255,0.3)' },
+              }}
+            >
+              <CloseIcon sx={{ fontSize: 36 }} />
+            </IconButton>
+            <Box
+              component="iframe"
+              src={iframeUrl}
+              sx={{
+                width: '100%', height: '100%', border: 'none', borderRadius: 2,
+                boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
+              }}
+              title="Website Preview"
+            />
+          </Box>
+        </Box>
+      )}
     </Box>
   );
 }
