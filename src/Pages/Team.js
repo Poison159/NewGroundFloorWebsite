@@ -13,19 +13,22 @@ const teamMembers = [
     name: "Siyabonga Hadebe",
     role: "Founder & Senior Software Engineer",
     image: bucketUrl + "siya.png",
-    linkedin: "https://www.linkedin.com/in/siyabonga-hadebe-a981b016/"
+    linkedin: "https://www.linkedin.com/in/siyabonga-hadebe-a981b016/",
+    description: "Founder of Ground Floor Technologies with 7+ years building full-stack apps. Previously Senior Frontend Developer at Platform45, Senior Software Engineer at Singular Systems, and Frontend Developer at Advance.io. Built and launched SpotVibe on the iOS App Store."
   },
   {
     name: "Sibongiseni Buthelezi",
     role: "Founder & Senior Software Engineer",
     image: bucketUrl + "sibo.png",
-    linkedin: "https://www.linkedin.com/in/sibongiseni-buthelezi-09599935/"
+    linkedin: "https://www.linkedin.com/in/sibongiseni-buthelezi-09599935/",
+    description: "Senior C# Developer at Avantedge Group building Practice Manager Pro for the legal industry. 6 years as Senior Software Developer at JSE, previously at Peregrine Holdings and Barclays Africa. Selected as BRICS Future Skills Challenge expert in data science."
   },
   {
     name: "Quentin Manamela",
     role: "Senior Software Engineer",
     image: bucketUrl + "quintin.png",
-    linkedin: "https://www.linkedin.com/in/quentinmanamela/"
+    linkedin: "https://www.linkedin.com/in/quentinmanamela/",
+    description: "Senior Software Engineer at Signant Health working on clinical trial technologies. Previously Senior Frontend Developer at Platform45 and Java Developer at FNB South Africa. WeThinkCode graduate skilled in web dev, Java, C/C++, UI/UX, and systems architecture."
   }
 ];
 
@@ -93,10 +96,18 @@ export default function TeamPage() {
                   </Typography>
                   <Typography
                     variant="body2"
-                    sx={{ color: 'rgba(255,255,255,0.6)', mb: 1.5 }}
+                    sx={{ color: 'rgba(255,255,255,0.6)', mb: 0.5 }}
                   >
                     {member.role}
                   </Typography>
+                  {member.description && (
+                    <Typography
+                      variant="body2"
+                      sx={{ color: 'rgba(255,255,255,0.5)', px: 1, fontSize: '0.8rem', lineHeight: 1.5, mb: 1.5 }}
+                    >
+                      {member.description}
+                    </Typography>
+                  )}
                   <IconButton
                     component="a"
                     href={member.linkedin}
