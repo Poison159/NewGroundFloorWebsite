@@ -10,88 +10,68 @@ const images = [
   '/images/ana_3.png',
 ];
 
-const SWIPE_THRESHOLD = 120;
+const SWIPE_THRESHOLD = 80;
 
 export default function SwipeCardsPage() {
   const navigate = useNavigate();
-  const [cardOrder, setCardOrder] = useState(images.map((_, i) => i));
-  const [cards, setCards] = useState(images.map((src, i) => ({
-    id: i, src,
-    x: 0, y: 0, rotation: 0, isOut: false, outX: 0,
-  })));
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [dismissing, setDismissing] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalIndex, setModalIndex] = useState(0);
-  const dragStart = useRef(null);
-  const currentOffset = useRef({ x: 0, y: 0 });
-  const isDragging = useRef(false);
-  const animating = useRef(false);
-  const wasDragged = useRef(false);
+  const cardRef = useRef(null);
+  const drag = useRef({ startX: null, startY: null, deltaX: 0, deltaY: 0, moved: false });
 
-  const activeId = cardOrder[0];
-  const activeCard = cards[activeId];
-  const nextIds = cardOrder.slice(1, 4);
-
-  const swipeCard = useCallback((direction) => {
-    if (animating.current) return;
-    animating.current = true;
-    const outX = direction === 'right' ? 800 : -800;
-    setCards(prev => prev.map(c =>
-      c.id === activeId ? { ...c, x: 0, y: 0, rotation: direction === 'right' ? 20 : -20, isOut: true, outX } : c
-    ));
+  const dismiss = useCallback(() => {
+    if (dismissing) return;
+    setDismissing(true);
     setTimeout(() => {
-      setCards(prev => prev.map(c =>
-        c.id === activeId ? { ...c, x: 0, y: 0, rotation: 0, isOut: false, outX: 0 } : c
-      ));
-      setCardOrder(prev => [...prev.slice(1), prev[0]]);
-      animating.current = false;
+      setCurrentIndex(i => (i + 1) % images.length);
+      setDismissing(false);
+      drag.current = { startX: null, startY: null, deltaX: 0, deltaY: 0, moved: false };
     }, 400);
-  }, [activeId]);
+  }, [dismissing]);
 
   const handlePointerDown = useCallback((e) => {
-    if (animating.current) return;
+    if (dismissing) return;
     const pos = e.type === 'touchstart'
       ? { x: e.touches[0].clientX, y: e.touches[0].clientY }
       : { x: e.clientX, y: e.clientY };
-    dragStart.current = pos;
-    currentOffset.current = { x: 0, y: 0 };
-    isDragging.current = true;
-    wasDragged.current = false;
-  }, []);
+    drag.current = { startX: pos.x, startY: pos.y, deltaX: 0, deltaY: 0, moved: false };
+  }, [dismissing]);
 
   const handlePointerMove = useCallback((e) => {
-    if (!isDragging.current || !dragStart.current || animating.current) return;
+    if (drag.current.startX == null || dismissing) return;
     const pos = e.type === 'touchmove'
       ? { x: e.touches[0].clientX, y: e.touches[0].clientY }
       : { x: e.clientX, y: e.clientY };
-    const dx = pos.x - dragStart.current.x;
-    const dy = pos.y - dragStart.current.y;
-    if (Math.abs(dx) > 5 || Math.abs(dy) > 5) wasDragged.current = true;
-    currentOffset.current = { x: dx, y: dy };
-    setCards(prev => prev.map(c =>
-      c.id === activeId ? { ...c, x: dx, y: dy, rotation: dx * 0.08 } : c
-    ));
-  }, [activeId]);
+    const dx = pos.x - drag.current.startX;
+    const dy = pos.y - drag.current.startY;
+    if (Math.abs(dx) > 5 || Math.abs(dy) > 5) drag.current.moved = true;
+    drag.current.deltaX = dx;
+    drag.current.deltaY = dy;
+    if (cardRef.current) {
+      cardRef.current.style.transform = `translateX(${dx}px) translateY(${dy}px) rotate(${dx * 0.08}deg)`;
+    }
+  }, [dismissing]);
 
   const handlePointerUp = useCallback(() => {
-    if (!isDragging.current) return;
-    isDragging.current = false;
-    dragStart.current = null;
-    const { x } = currentOffset.current;
-    if (Math.abs(x) > SWIPE_THRESHOLD) {
-      swipeCard(x > 0 ? 'right' : 'left');
-    } else {
-      setCards(prev => prev.map(c =>
-        c.id === activeId ? { ...c, x: 0, y: 0, rotation: 0 } : c
-      ));
+    if (drag.current.startX == null) return;
+    const { deltaX, moved } = drag.current;
+    if (moved && Math.abs(deltaX) > SWIPE_THRESHOLD) {
+      dismiss();
     }
-  }, [activeId, swipeCard]);
+    if (cardRef.current) {
+      cardRef.current.style.transform = '';
+      cardRef.current.style.opacity = '';
+    }
+    drag.current = { startX: null, startY: null, deltaX: 0, deltaY: 0, moved: false };
+  }, [dismiss]);
 
-  const handleClick = useCallback(() => {
-    if (animating.current || wasDragged.current) return;
-    const idx = cardOrder[0];
-    setModalIndex(idx);
+  const handleCardClick = useCallback(() => {
+    if (drag.current.moved || dismissing) return;
+    setModalIndex(currentIndex);
     setModalOpen(true);
-  }, [cardOrder]);
+  }, [currentIndex, dismissing]);
 
   const handleClose = useCallback(() => setModalOpen(false), []);
   const handleNavigate = useCallback((dir) => {
@@ -111,6 +91,16 @@ export default function SwipeCardsPage() {
     window.addEventListener('keydown', handleKey);
     return () => window.removeEventListener('keydown', handleKey);
   }, [modalOpen, handleNavigate, handleClose]);
+
+  const visibleCards = [];
+  const numVisible = Math.min(4, images.length);
+  for (let i = 0; i < numVisible; i++) {
+    visibleCards.push({
+      key: (currentIndex + i) % images.length,
+      imgIndex: (currentIndex + i) % images.length,
+      stackIndex: i,
+    });
+  }
 
   return (
     <Box sx={{ minHeight: '100vh', py: 4, position: 'relative' }}>
@@ -138,62 +128,57 @@ export default function SwipeCardsPage() {
         </Box>
 
         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 560, perspective: 1200 }}>
-          <Box sx={{ position: 'relative', width: 640, height: 480 }}>
-            {nextIds.map((id, i) => {
-              const card = cards[id];
+          <Box sx={{ position: 'relative', width: 640, height: 480, '& .swipe-card-dismiss': {
+            transform: `translateX(120%) rotate(16deg) !important`,
+            opacity: '0 !important',
+            transition: 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease !important',
+          }}}>
+            {visibleCards.map(({ key, imgIndex, stackIndex }) => {
+              const isTop = stackIndex === 0;
+              const offset = stackIndex * 8;
+              const rot = stackIndex * 2;
               return (
-                <Box key={card.id} sx={{
-                  position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
-                  transform: `translateX(${(i + 1) * 8}px) rotate(${(i + 1) * 2}deg)`,
-                  transition: 'transform 0.3s ease', pointerEvents: 'none',
-                }}>
+                <Box
+                  key={key}
+                  ref={isTop ? cardRef : null}
+                  className={isTop && dismissing ? 'swipe-card-dismiss' : ''}
+                  sx={{
+                    position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
+                    transform: `translateX(${offset}px) rotate(${rot}deg)`,
+                    transition: 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease',
+                    cursor: isTop ? 'grab' : 'default',
+                    zIndex: 10 - stackIndex,
+                    opacity: isTop && dismissing ? 0 : 1,
+                    pointerEvents: isTop ? 'auto' : 'none',
+                    userSelect: 'none',
+                    touchAction: 'none',
+                    willChange: 'transform',
+                    '&:active': isTop ? { cursor: 'grabbing' } : undefined,
+                  }}
+                  onMouseDown={isTop ? handlePointerDown : undefined}
+                  onMouseMove={isTop ? handlePointerMove : undefined}
+                  onMouseUp={isTop ? handlePointerUp : undefined}
+                  onMouseLeave={isTop ? handlePointerUp : undefined}
+                  onTouchStart={isTop ? handlePointerDown : undefined}
+                  onTouchMove={isTop ? handlePointerMove : undefined}
+                  onTouchEnd={isTop ? handlePointerUp : undefined}
+                  onClick={isTop ? handleCardClick : undefined}
+                >
                   <Box sx={{
                     width: '100%', height: '100%', background: '#000',
                     borderRadius: '16px', border: '2px solid #333',
-                    overflow: 'hidden', boxShadow: '0 8px 30px rgba(0,0,0,0.4)',
+                    overflow: 'hidden',
+                    boxShadow: isTop ? '0 20px 60px rgba(0,0,0,0.5)' : '0 8px 30px rgba(0,0,0,0.4)',
+                    transition: 'box-shadow 0.2s ease',
                   }}>
-                    <Box component="img" src={card.src} sx={{
+                    <Box component="img" src={images[imgIndex]} sx={{
                       width: '100%', height: '100%', objectFit: 'contain', display: 'block',
-                    }} />
+                      userSelect: 'none', WebkitUserSelect: 'none',
+                    }} draggable={false} />
                   </Box>
                 </Box>
               );
             })}
-
-            {activeCard && (
-              <Box
-                sx={{
-                  position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
-                  transform: `translateX(${activeCard.isOut ? activeCard.outX : activeCard.x}px) translateY(${activeCard.y}px) rotate(${activeCard.rotation}deg)`,
-                  transition: activeCard.isOut
-                    ? 'transform 0.4s ease, opacity 0.35s ease'
-                    : isDragging.current ? 'none' : 'transform 0.3s ease',
-                  cursor: 'grab', zIndex: 10, opacity: activeCard.isOut ? 0 : 1,
-                  userSelect: 'none',
-                }}
-                onMouseDown={handlePointerDown}
-                onMouseMove={handlePointerMove}
-                onMouseUp={handlePointerUp}
-                onMouseLeave={handlePointerUp}
-                onTouchStart={handlePointerDown}
-                onTouchMove={handlePointerMove}
-                onTouchEnd={handlePointerUp}
-                onClick={handleClick}
-              >
-                <Box sx={{
-                  width: '100%', height: '100%', background: '#000',
-                  borderRadius: '16px', border: '2px solid #444',
-                  overflow: 'hidden',
-                  boxShadow: activeCard.x !== 0 ? '0 20px 60px rgba(0,0,0,0.5)' : '0 8px 30px rgba(0,0,0,0.4)',
-                  transition: 'box-shadow 0.2s ease',
-                }}>
-                  <Box component="img" src={activeCard.src} sx={{
-                    width: '100%', height: '100%', objectFit: 'contain', display: 'block',
-                    userSelect: 'none', WebkitUserSelect: 'none',
-                  }} draggable={false} />
-                </Box>
-              </Box>
-            )}
           </Box>
         </Box>
       </Container>

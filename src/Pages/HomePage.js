@@ -177,11 +177,11 @@ export default function HomePage() {
                 }}
               >
                 <CardContent sx={{ p: 4, textAlign: 'center' }}>
-                  <Typography variant="h4" sx={{ color: 'white', fontWeight: 700, mb: 1 }}>
-                    Starts @ R5 000
-                  </Typography>
-                  <Typography variant="h5" sx={{ color: 'white', fontWeight: 600, mb: 2 }}>
+                  <Typography variant="h4" sx={{ fontWeight: 600, mb: 1, background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
                     Mobile Apps
+                  </Typography>
+                  <Typography variant="h6" sx={{ color: 'white', fontWeight: 700, mb: 2 }}>
+                    Starts @ R5 000
                   </Typography>
                   <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.7)', mb: 2, lineHeight: 1.7 }}>
                     Android & iOS — cross-platform. Working prototype with core features delivered 
@@ -213,11 +213,11 @@ export default function HomePage() {
                 }}
               >
                 <CardContent sx={{ p: 4, textAlign: 'center' }}>
-                  <Typography variant="h4" sx={{ color: 'white', fontWeight: 700, mb: 1 }}>
-                    Starts @ R800
-                  </Typography>
-                  <Typography variant="h5" sx={{ color: 'white', fontWeight: 600, mb: 2 }}>
+                  <Typography variant="h4" sx={{ fontWeight: 600, mb: 1, background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
                     Websites
+                  </Typography>
+                  <Typography variant="h6" sx={{ color: 'white', fontWeight: 700, mb: 2 }}>
+                    Starts @ R800
                   </Typography>
                   <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.7)', lineHeight: 1.7 }}>
                     Responsive, modern websites delivered within a week. Single-page or multi-page, 
@@ -250,11 +250,11 @@ export default function HomePage() {
                 }}
               >
                 <CardContent sx={{ p: 4, textAlign: 'center' }}>
-                  <Typography variant="h4" sx={{ color: 'white', fontWeight: 700, mb: 1 }}>
-                    Starts @ R1 000
-                  </Typography>
-                  <Typography variant="h5" sx={{ color: 'white', fontWeight: 600, mb: 2 }}>
+                  <Typography variant="h4" sx={{ fontWeight: 600, mb: 1, background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
                     Analytics
+                  </Typography>
+                  <Typography variant="h6" sx={{ color: 'white', fontWeight: 700, mb: 2 }}>
+                    Starts @ R1 000
                   </Typography>
                   <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.7)', lineHeight: 1.7 }}>
                     Add analytics to your existing solution. Dashboards, reporting, and data 

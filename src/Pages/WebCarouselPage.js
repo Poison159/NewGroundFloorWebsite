@@ -21,7 +21,7 @@ const projects = [
     ],
   },
   {
-    name: 'Envibe Web',
+    name: 'SpotVibe Web/Admin',
     url: 'https://spotvibe-admin.groundfloor.africa/events',
     description: 'A powerful admin panel for managing business operations, users, and analytics in real-time.',
     images: [
@@ -30,6 +30,52 @@ const projects = [
       '/images/web_admin_3.png',
       '/images/web_admin_4.png',
       '/images/web_admin_5.png',
+    ],
+  },
+  {
+    name: 'Credo Mutwa',
+    url: 'https://credomutwa.web.app/',
+    description: 'A cultural village website showcasing the heritage, art, and legacy of Credo Mutwa in Soweto.',
+    images: [
+      '/images/credoMutwa/screenshot_1.png',
+      '/images/credoMutwa/screenshot_2.png',
+      '/images/credoMutwa/screenshot_3.png',
+      '/images/credoMutwa/screenshot_4.png',
+      '/images/credoMutwa/screenshot_5.png',
+    ],
+  },
+  {
+    name: 'Joburg Theatre',
+    url: 'https://joburgtheatre-3f2f4.web.app/',
+    description: 'A vibrant theatre venue website featuring upcoming shows, events, and ticket booking.',
+    images: [
+      '/images/soweto_theatre/screenshot_1.png',
+      '/images/soweto_theatre/screenshot_2.png',
+      '/images/soweto_theatre/screenshot_3.png',
+      '/images/soweto_theatre/screenshot_4.png',
+      '/images/soweto_theatre/screenshot_5.png',
+    ],
+  },
+  {
+    name: 'SpotVibe',
+    url: 'https://spotvibe.co.za/',
+    description: 'A modern event discovery and nightlife platform connecting people to vibes, venues, and experiences.',
+    images: [
+      '/images/SpotVibe-Merketing/screenshot_1.png',
+      '/images/SpotVibe-Merketing/screenshot_2.png',
+      '/images/SpotVibe-Merketing/screenshot_3.png',
+      '/images/SpotVibe-Merketing/screenshot_4.png',
+    ],
+  },
+  {
+    name: 'Soweto Equestrian',
+    url: 'https://sowetoequestrian-8680d.web.app/services',
+    description: 'An equestrian centre website offering horse riding services, lessons, and events in Soweto.',
+    images: [
+      '/images/aquestrian/screenshot_1.png',
+      '/images/aquestrian/screenshot_2.png',
+      '/images/aquestrian/screenshot_3.png',
+      '/images/aquestrian/screenshot_4.png',
     ],
   },
 ];
@@ -234,7 +280,7 @@ export default function WebCarouselPage() {
             </Typography>
             <Box
               onClick={() => {
-                if (project.name === 'Envibe Web') {
+                if (project.name === 'SpotVibe Web/Admin') {
                   window.open(project.url, '_blank', 'noopener,noreferrer');
                 } else {
                   setIframeUrl(project.url);
@@ -270,6 +316,9 @@ export default function WebCarouselPage() {
           </IconButton>
         </Box>
 
+        <Box sx={{ textAlign: 'center', mb: 1, color: 'rgba(255,255,255,0.4)', fontSize: '0.85rem', fontWeight: 500, letterSpacing: 1 }}>
+          swipe or click image
+        </Box>
         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 560, perspective: 1200 }}>
           <SwipeDeck key={projectIndex} images={project.images} />
         </Box>
