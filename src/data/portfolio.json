@@ -2,7 +2,7 @@
   "portfolio": [
     {
       "id": "project-1",
-      "title": "SpotVibe / Envibe",
+      "title": "SpotVibe",
       "category": "Mobile",
       "description": "A React Native app that uses location to find nearby events, activities and venues based on your vibe. Live on iOS App Store and Google Play.",
       "tech": ["React Native", "Expo", ".NET Core", "MongoDB"],
@@ -38,7 +38,7 @@
       "description": "A cultural village website showcasing the heritage, art, and legacy of Credo Mutwa in Soweto. Features virtual tours and event listings.",
       "tech": ["React", "Firebase", "CSS"],
       "image": "/images/credoMutwa/screenshot_1.png",
-      "imageHover": "/images/credoMutwa/screenshot_4.png",
+      "imageHover": "/images/before/credo_mutua.png",
       "images": [
         "/images/credoMutwa/screenshot_1.png",
         "/images/credoMutwa/screenshot_2.png",
@@ -56,7 +56,7 @@
       "description": "A vibrant theatre venue website featuring upcoming shows, events, and ticket booking for the iconic Johannesburg theatre.",
       "tech": ["React", "Firebase", "Material UI"],
       "image": "/images/soweto_theatre/screenshot_2.png",
-      "imageHover": "/images/soweto_theatre/screenshot_3.png",
+      "imageHover": "/images/before/joburg_theatre.png",
       "images": [
         "/images/soweto_theatre/screenshot_1.png",
         "/images/soweto_theatre/screenshot_2.png",
@@ -74,7 +74,7 @@
       "description": "An equestrian centre website offering horse riding services, lessons, and events in Soweto. Built with a clean, modern design.",
       "tech": ["React", "Firebase", "Stripe"],
       "image": "/images/aquestrian/screenshot_1.png",
-      "imageHover": "/images/aquestrian/screenshot_3.png",
+      "imageHover": "/images/before/soweto_aquestrian.png",
       "images": [
         "/images/aquestrian/screenshot_1.png",
         "/images/aquestrian/screenshot_2.png",

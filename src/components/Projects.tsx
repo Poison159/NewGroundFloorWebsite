@@ -4,8 +4,119 @@ import { useScrollReveal } from '../hooks/useScrollReveal'
 import AnimatedCard from './AnimatedCard'
 import RedactedReveal from './RedactedReveal'
 
+const rawKeywords = [
+  { text: 'const', color: '#569CD6' },
+  { text: 'let', color: '#569CD6' },
+  { text: 'var', color: '#569CD6' },
+  { text: 'function', color: '#DCDCAA' },
+  { text: 'return', color: '#569CD6' },
+  { text: 'class', color: '#4EC9B0' },
+  { text: 'extends', color: '#569CD6' },
+  { text: 'import', color: '#569CD6' },
+  { text: 'export', color: '#569CD6' },
+  { text: 'default', color: '#569CD6' },
+  { text: 'from', color: '#569CD6' },
+  { text: 'async', color: '#569CD6' },
+  { text: 'await', color: '#569CD6' },
+  { text: 'try', color: '#C586C0' },
+  { text: 'catch', color: '#C586C0' },
+  { text: 'throw', color: '#C586C0' },
+  { text: 'new', color: '#569CD6' },
+  { text: 'this', color: '#569CD6' },
+  { text: 'typeof', color: '#569CD6' },
+  { text: 'instanceof', color: '#569CD6' },
+  { text: 'if', color: '#C586C0' },
+  { text: 'else', color: '#C586C0' },
+  { text: 'for', color: '#C586C0' },
+  { text: 'while', color: '#C586C0' },
+  { text: 'do', color: '#C586C0' },
+  { text: 'switch', color: '#C586C0' },
+  { text: 'case', color: '#C586C0' },
+  { text: 'break', color: '#C586C0' },
+  { text: 'continue', color: '#C586C0' },
+  { text: 'true', color: '#569CD6' },
+  { text: 'false', color: '#569CD6' },
+  { text: 'null', color: '#569CD6' },
+  { text: 'undefined', color: '#569CD6' },
+  { text: 'void', color: '#569CD6' },
+  { text: 'interface', color: '#C586C0' },
+  { text: 'type', color: '#4EC9B0' },
+  { text: 'enum', color: '#C586C0' },
+  { text: 'implements', color: '#C586C0' },
+  { text: 'abstract', color: '#C586C0' },
+  { text: 'static', color: '#569CD6' },
+  { text: 'readonly', color: '#569CD6' },
+  { text: 'keyof', color: '#569CD6' },
+  { text: 'infer', color: '#569CD6' },
+  { text: 'never', color: '#569CD6' },
+  { text: 'unknown', color: '#569CD6' },
+  { text: 'any', color: '#569CD6' },
+  { text: 'Promise', color: '#4EC9B0' },
+  { text: 'Error', color: '#F44747' },
+  { text: 'Exception', color: '#F44747' },
+  { text: 'Map', color: '#4EC9B0' },
+  { text: 'Set', color: '#4EC9B0' },
+  { text: 'Array', color: '#4EC9B0' },
+  { text: 'Object', color: '#4EC9B0' },
+  { text: 'String', color: '#4EC9B0' },
+  { text: 'Number', color: '#4EC9B0' },
+  { text: 'Boolean', color: '#4EC9B0' },
+  { text: 'delete', color: '#569CD6' },
+  { text: 'in', color: '#569CD6' },
+  { text: 'of', color: '#569CD6' },
+  { text: 'get', color: '#569CD6' },
+  { text: 'set', color: '#569CD6' },
+  { text: 'yield', color: '#569CD6' },
+  { text: 'generator', color: '#DCDCAA' },
+  { text: 'module', color: '#569CD6' },
+  { text: 'namespace', color: '#569CD6' },
+  { text: 'package', color: '#569CD6' },
+  { text: 'private', color: '#C586C0' },
+  { text: 'protected', color: '#C586C0' },
+  { text: 'public', color: '#C586C0' },
+  { text: 'as', color: '#569CD6' },
+  { text: 'satisfies', color: '#569CD6' },
+]
+const keywords = rawKeywords.map(k => ({
+  ...k,
+  fontSize: 11 + Math.random() * 6,
+  opacity: 0.15 + Math.random() * 0.2,
+}))
+
+interface WordData {
+  text: string
+  color: string
+  x: number
+  y: number
+  vx: number
+  vy: number
+  fontSize: number
+  opacity: number
+}
+
+function initWord(keyword: typeof keywords[0], w: number, h: number): WordData {
+  return {
+    text: keyword.text,
+    color: keyword.color,
+    x: Math.random() * w,
+    y: Math.random() * h,
+    vx: (Math.random() - 0.5) * 0.4,
+    vy: (Math.random() - 0.5) * 0.4,
+    fontSize: 11 + Math.random() * 6,
+    opacity: 0.15 + Math.random() * 0.2,
+  }
+}
+
 export default function Projects() {
   const { ref, visible } = useScrollReveal(0.05)
+
+  useEffect(() => {
+    data.portfolio.forEach(project => {
+      if (project.id === 'project-1') return
+      const urls: string[] = [project.image, project.imageHover, ...(project.images || [])].filter(Boolean) as string[]
+      urls.forEach(url => { const img = new Image(); img.src = url })
+    })
+  }, [])
 
   const [projectIndex, setProjectIndex] = useState(0)
   const [dismissing, setDismissing] = useState(false)
@@ -15,8 +126,11 @@ export default function Projects() {
   const [cardsRevealed, setCardsRevealed] = useState(false)
   const [cardEntryDone, setCardEntryDone] = useState(false)
   const cardsRef = useRef<HTMLDivElement>(null)
-  const [arrowPos, setArrowPos] = useState({ x: 0, y: 0 })
+  const [arrowPos, setArrowPos] = useState({ x: 0, y: 0, angle: 0 })
   const smoothPathRef = useRef<SVGPathElement>(null)
+  const wordRefs = useRef<(HTMLSpanElement | null)[]>([])
+  const mouseRef = useRef({ x: -1000, y: -1000 })
+  const wordsRef = useRef<WordData[]>([])
 
   useEffect(() => {
     const el = cardsContainerRef.current
@@ -57,75 +171,42 @@ export default function Projects() {
       const container = section?.querySelector('[data-projects-container]') as HTMLElement | null
       const startMarker = section?.querySelector('[data-projects-path-start]') as HTMLElement | null
       const cards = section?.querySelectorAll<HTMLElement>('[data-card-image]')
-      if (!container || !startMarker || !cards || cards.length === 0) return
+      if (!section || !container || !startMarker || !cards || cards.length === 0) return
 
       const containerRect = container.getBoundingClientRect()
       const startRect = startMarker.getBoundingClientRect()
-
       const startX = startRect.left - containerRect.left + startRect.width / 2
       const startY = startRect.top - containerRect.top + startRect.height / 2
 
       const points: { x: number; y: number }[] = [{ x: startX, y: startY }]
 
-      cards.forEach((card, i) => {
-        const rect = card.getBoundingClientRect()
-        const relX = rect.left - containerRect.left
-        const relY = rect.top - containerRect.top
-        const relRight = rect.right - containerRect.left
-        const relBottom = rect.bottom - containerRect.top
-        const relMidY = relY + (relBottom - relY) / 2
-
-        if (i % 2 === 0) {
-          points.push({ x: relRight + 20, y: relMidY - 16 })
-          points.push({ x: relRight + 20, y: relMidY + 16 })
-        } else {
-          points.push({ x: relX - 20, y: relMidY + 16 })
-          points.push({ x: relX - 20, y: relMidY - 16 })
-        }
-      })
-
-      let maxBottom = startRect.bottom
-      cards.forEach(card => {
+      cards.forEach((card) => {
         const r = card.getBoundingClientRect()
-        maxBottom = Math.max(maxBottom, r.bottom)
+        const cx = (r.left + r.right) / 2 - containerRect.left
+        const cy = (r.top + r.bottom) / 2 - containerRect.top
+        const prev = points[points.length - 1]
+        points.push({ x: cx, y: prev.y })
+        points.push({ x: cx, y: cy })
       })
+
+      // Extend path past the last card down to the bottom of the section
+      const sectionRect = section.getBoundingClientRect()
+      const containerBottom = containerRect.bottom - containerRect.top
+      const lastPt = points[points.length - 1]
+      points.push({ x: lastPt.x, y: containerBottom })
 
       const rawProgress = Math.max(0, Math.min(1,
-        (window.innerHeight - startRect.top) / (window.innerHeight + (maxBottom - startRect.top))
+        (window.innerHeight - startRect.top) / (window.innerHeight + (sectionRect.bottom - startRect.top))
       ))
 
-      // Build expanded waypoints with S-curve swings between each pair
-      const expanded: { x: number; y: number }[] = [points[0]]
-      for (let i = 0; i < points.length - 1; i++) {
-        const a = points[i]
-        const b = points[i + 1]
-        const dx = b.x - a.x
-        const dy = b.y - a.y
-        const dist = Math.sqrt(dx * dx + dy * dy)
-        const nx = -dy / dist
-        const ny = dx / dist
-        const swing = Math.min(50, dist * 0.35)
-        const sign = i % 2 === 0 ? 1 : -1
-
-        expanded.push({
-          x: a.x + dx * 0.33 + nx * swing * sign,
-          y: a.y + dy * 0.33 + ny * swing * sign,
-        })
-        expanded.push({
-          x: a.x + dx * 0.67 - nx * swing * sign,
-          y: a.y + dy * 0.67 - ny * swing * sign,
-        })
-        expanded.push(b)
-      }
-
-      // Catmull-rom smooth cubic bezier through expanded points
-      const n = expanded.length
-      let d = `M ${expanded[0].x} ${expanded[0].y}`
+      // Catmull-rom smooth cubic bezier through points
+      const n = points.length
+      let d = `M ${points[0].x} ${points[0].y}`
       for (let i = 0; i < n - 1; i++) {
-        const pPrev = expanded[Math.max(0, i - 1)]
-        const p1 = expanded[i]
-        const p2 = expanded[i + 1]
-        const pNext = expanded[Math.min(n - 1, i + 2)]
+        const pPrev = points[Math.max(0, i - 1)]
+        const p1 = points[i]
+        const p2 = points[i + 1]
+        const pNext = points[Math.min(n - 1, i + 2)]
         const cp1x = p1.x + (p2.x - pPrev.x) / 6
         const cp1y = p1.y + (p2.y - pPrev.y) / 6
         const cp2x = p2.x - (pNext.x - p1.x) / 6
@@ -141,8 +222,8 @@ export default function Projects() {
           const clamped = Math.max(0, Math.min(totalLen, len))
           const pt = smoothPathRef.current.getPointAtLength(clamped)
           const prevPt = smoothPathRef.current.getPointAtLength(Math.max(0, clamped - 3))
-          const angle = Math.atan2(pt.y - prevPt.y, pt.x - prevPt.x) * 180 / Math.PI + 90
-          setArrowPos({ x: pt.x, y: pt.y })
+          const angle = Math.atan2(pt.y - prevPt.y, pt.x - prevPt.x) * 180 / Math.PI - 90
+          setArrowPos({ x: pt.x, y: pt.y, angle })
         }
       }
     }
@@ -152,21 +233,102 @@ export default function Projects() {
     return () => window.removeEventListener('scroll', computeArrow)
   }, [])
 
+  useEffect(() => {
+    const container = cardsRef.current
+    if (!container) return
+    const rect = container.getBoundingClientRect()
+    const w = rect.width
+    const h = rect.height
+    wordsRef.current = keywords.map(k => initWord(k, w, h))
+    wordRefs.current = new Array(keywords.length)
+
+    let raf: number
+    const step = () => {
+      const cw = container.clientWidth
+      const ch = container.clientHeight
+      const mx = mouseRef.current.x
+      const my = mouseRef.current.y
+      const words = wordsRef.current
+
+      for (let i = 0; i < words.length; i++) {
+        const w = words[i]
+        const dx = w.x - mx
+        const dy = w.y - my
+        const dist = Math.sqrt(dx * dx + dy * dy)
+        if (dist < 200) {
+          const force = (200 - dist) / 200 * 1.2
+          w.vx += (dx / dist) * force * 0.3
+          w.vy += (dy / dist) * force * 0.3
+        }
+
+        w.vx *= 0.99
+        w.vy *= 0.99
+        w.x += w.vx
+        w.y += w.vy
+
+        if (w.x < 0) { w.x = 0; w.vx *= -0.8 }
+        if (w.x > cw) { w.x = cw; w.vx *= -0.8 }
+        if (w.y < 0) { w.y = 0; w.vy *= -0.8 }
+        if (w.y > ch) { w.y = ch; w.vy *= -0.8 }
+
+        const el = wordRefs.current[i]
+        if (el) {
+          el.style.transform = `translate(${w.x}px, ${w.y}px)`
+        }
+      }
+
+      // Word-word collisions
+      for (let i = 0; i < words.length; i++) {
+        for (let j = i + 1; j < words.length; j++) {
+          const a = words[i]
+          const b = words[j]
+          const dx = b.x - a.x
+          const dy = b.y - a.y
+          const dist = Math.sqrt(dx * dx + dy * dy)
+          const minDist = 30
+          if (dist < minDist && dist > 0.01) {
+            const overlap = (minDist - dist) / 2
+            const nx = dx / dist
+            const ny = dy / dist
+            a.x -= nx * overlap
+            a.y -= ny * overlap
+            b.x += nx * overlap
+            b.y += ny * overlap
+            const relVx = a.vx - b.vx
+            const relVy = a.vy - b.vy
+            const relDot = relVx * nx + relVy * ny
+            if (relDot > 0) {
+              a.vx -= nx * relDot * 0.5
+              a.vy -= ny * relDot * 0.5
+              b.vx += nx * relDot * 0.5
+              b.vy += ny * relDot * 0.5
+            }
+          }
+        }
+      }
+
+      raf = requestAnimationFrame(step)
+    }
+    raf = requestAnimationFrame(step)
+    return () => cancelAnimationFrame(raf)
+  }, [])
+
+  const beforeAfterProjects = data.portfolio.filter(p => p.id !== 'project-1' && p.id !== 'project-2')
+
   const dismiss = useCallback(() => {
     if (dismissing) return
     setDismissing(true)
     setTimeout(() => {
-      setProjectIndex(i => (i + 1) % data.portfolio.length)
+      setProjectIndex(i => (i + 1) % beforeAfterProjects.length)
       setDismissing(false)
       setHovered(false)
     }, 400)
-  }, [dismissing])
-
+  }, [dismissing, beforeAfterProjects.length])
   const visibleCards = []
-  const numVisible = Math.min(4, data.portfolio.length)
+  const numVisible = Math.min(4, beforeAfterProjects.length)
   for (let i = 0; i < numVisible; i++) {
     visibleCards.push({
-      project: data.portfolio[(projectIndex + i) % data.portfolio.length],
+      project: beforeAfterProjects[(projectIndex + i) % beforeAfterProjects.length],
       stackIndex: i,
     })
   }
@@ -282,18 +444,71 @@ export default function Projects() {
           <path ref={smoothPathRef} d="" fill="none" stroke="none" />
           {arrowPos.y > 0 && (
             <g
-              transform={`translate(${arrowPos.x},${arrowPos.y})`}
+              transform={`translate(${arrowPos.x},${arrowPos.y}) rotate(${arrowPos.angle})`}
               style={{ transition: 'transform 0.15s linear' }}
             >
-              <circle cx="0" cy="0" r="10" fill="none" stroke="#d2ff00" strokeWidth="2" opacity="0.2" />
-              <circle cx="0" cy="0" r="6" fill="none" stroke="#d2ff00" strokeWidth="1.5" />
-              <circle cx="0" cy="0" r="2.5" fill="#d2ff00" />
+              <ellipse cx="0" cy="-1" rx="7" ry="9" fill="none" stroke="#d2ff00" strokeWidth="2" />
+              <circle cx="0" cy="-12" r="5" fill="none" stroke="#d2ff00" strokeWidth="2" />
+              <polygon points="5,-14 12,-12 5,-10" fill="#d2ff00" />
+              <circle cx="1.5" cy="-13" r="1.2" fill="#d2ff00" />
+              <g className="bird-wing-l" style={{ transformOrigin: '-7px -1px' }}>
+                <path d="M -7,-1 C -16,-7 -22,-3 -24,2 C -22,7 -16,10 -7,3" fill="none" stroke="#d2ff00" strokeWidth="1.5" strokeLinecap="round" />
+              </g>
+              <g className="bird-wing-r" style={{ transformOrigin: '7px -1px' }}>
+                <path d="M 7,-1 C 16,-7 22,-3 24,2 C 22,7 16,10 7,3" fill="none" stroke="#d2ff00" strokeWidth="1.5" strokeLinecap="round" />
+              </g>
+              <path d="M -4,7 C -8,11 -10,13 -8,15" fill="none" stroke="#d2ff00" strokeWidth="1.5" strokeLinecap="round" />
+              <path d="M 4,7 C 8,11 10,13 8,15" fill="none" stroke="#d2ff00" strokeWidth="1.5" strokeLinecap="round" />
+              <g className="bird-leg-l" style={{ transformOrigin: '-2px 8px' }}>
+                <line x1="-2" y1="8" x2="-3" y2="16" stroke="#d2ff00" strokeWidth="1.5" strokeLinecap="round" />
+              </g>
+              <g className="bird-leg-r" style={{ transformOrigin: '2px 8px' }}>
+                <line x1="2" y1="8" x2="3" y2="16" stroke="#d2ff00" strokeWidth="1.5" strokeLinecap="round" />
+              </g>
             </g>
           )}
         </svg>
 
         {/* Tinder-like Swipe Cards */}
-        <div ref={cardsRef} style={{ marginTop: '6rem' }}>
+        <div
+          ref={cardsRef}
+          style={{ marginTop: '6rem', position: 'relative', overflow: 'hidden' }}
+          onMouseMove={(e) => {
+            const rect = cardsRef.current?.getBoundingClientRect()
+            if (rect) {
+              mouseRef.current = {
+                x: e.clientX - rect.left,
+                y: e.clientY - rect.top,
+              }
+            }
+          }}
+          onMouseLeave={() => {
+            mouseRef.current = { x: -1000, y: -1000 }
+          }}
+        >
+          {keywords.map((kw, i) => (
+            <span
+              key={i}
+              ref={el => { wordRefs.current[i] = el }}
+              style={{
+                position: 'absolute',
+                left: 0,
+                top: 0,
+                transform: 'translate(0, 0)',
+                fontSize: `${kw.fontSize}px`,
+                fontWeight: 600,
+                fontFamily: "'Fira Code', 'JetBrains Mono', 'Cascadia Code', monospace",
+                color: kw.color,
+                opacity: kw.opacity,
+                pointerEvents: 'none',
+                zIndex: 1,
+                userSelect: 'none',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              {kw.text}
+            </span>
+          ))}
           <div
             style={{
               width: 40,
@@ -311,9 +526,20 @@ export default function Projects() {
               margin: 0,
             }}
           >
-            Hover to{' '}
-            <span style={{ color: '#d2ff00' }}>Reveal</span>
+            <span style={{ color: '#d2ff00' }}>Before</span> &{' '}
+            <span style={{ color: '#d2ff00' }}>After</span>
           </h3>
+          <p
+            style={{
+              color: 'rgba(255,255,255,0.5)',
+              fontSize: 'clamp(0.85rem, 1.3vw, 1rem)',
+              lineHeight: 1.6,
+              marginTop: '0.5rem',
+              maxWidth: 560,
+            }}
+          >
+            We modernise outdated business websites into stunning experiences that reflect who they are — their brand, their culture, and what they do.
+          </p>
 
           <div
             style={{
@@ -354,7 +580,7 @@ export default function Projects() {
                       borderRadius: 16,
                       overflow: 'hidden',
                       background: '#111',
-                      border: '1px solid rgba(255,255,255,0.06)',
+                      border: '2px solid #d2ff00',
                       boxShadow: isTop
                         ? '0 20px 60px rgba(0,0,0,0.5)'
                         : '0 8px 30px rgba(0,0,0,0.4)',
@@ -473,6 +699,34 @@ export default function Projects() {
                       </p>
                     </div>
 
+                    {/* After / Before chip */}
+                    <div
+                      style={{
+                        position: 'absolute',
+                        bottom: '1.5rem',
+                        right: '1.5rem',
+                        zIndex: 2,
+                        opacity: isTop ? 1 : 0,
+                        transition: isTop ? 'opacity 0.4s 0.1s' : 'none',
+                      }}
+                    >
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          padding: '0.35rem 0.85rem',
+                          borderRadius: 100,
+                          background: '#d2ff00',
+                          color: '#0a0a0a',
+                          fontSize: '0.75rem',
+                          fontWeight: 700,
+                          letterSpacing: '0.06em',
+                          textTransform: 'uppercase',
+                        }}
+                      >
+                        {hovered ? 'Before' : 'After'}
+                      </span>
+                    </div>
+
                     {/* Stack number */}
                     <div
                       style={{
@@ -505,6 +759,26 @@ export default function Projects() {
               opacity: 0 !important;
               transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s ease !important;
             }
+            @keyframes bird-flap-l {
+              0%, 100% { transform: rotate(-35deg); }
+              50% { transform: rotate(25deg); }
+            }
+            @keyframes bird-flap-r {
+              0%, 100% { transform: rotate(35deg); }
+              50% { transform: rotate(-25deg); }
+            }
+            @keyframes bird-dangle-l {
+              0%, 100% { transform: rotate(12deg); }
+              50% { transform: rotate(-12deg); }
+            }
+            @keyframes bird-dangle-r {
+              0%, 100% { transform: rotate(-12deg); }
+              50% { transform: rotate(12deg); }
+            }
+            .bird-wing-l { animation: bird-flap-l 0.3s ease-in-out infinite; }
+            .bird-wing-r { animation: bird-flap-r 0.3s ease-in-out infinite; }
+            .bird-leg-l { animation: bird-dangle-l 0.5s ease-in-out infinite; }
+            .bird-leg-r { animation: bird-dangle-r 0.5s ease-in-out infinite; }
           `}</style>
         </div>
       </div>

@@ -266,6 +266,7 @@ export default function AnimatedCard({ title, description, tags, image, imageHov
             overflow: 'hidden',
             position: 'relative',
             background: '#111',
+            border: '0.7px solid #d2ff00',
           }}
           onMouseEnter={() => setHovered(true)}
           onMouseLeave={() => setHovered(false)}
@@ -310,6 +311,7 @@ export default function AnimatedCard({ title, description, tags, image, imageHov
             overflow: 'hidden',
             position: 'relative',
             background: '#111',
+            border: '0.7px solid #d2ff00',
           }}
           onMouseEnter={() => setHovered(true)}
           onMouseLeave={() => setHovered(false)}
