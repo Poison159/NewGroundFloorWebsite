@@ -5,6 +5,7 @@ import Hero from './components/Hero'
 import HorizontalScroll from './components/HorizontalScroll'
 import Projects from './components/Projects'
 import Team from './components/Team'
+import Process from './components/Process'
 import Pricing from './components/Pricing'
 import Contact from './components/Contact'
 import CursorTrail from './components/CursorTrail'
@@ -61,6 +62,7 @@ export default function App() {
         <HorizontalScroll />
         <Projects />
         <Team />
+        <Process />
         <Pricing />
         <Contact />
       </main>
