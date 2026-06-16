@@ -4,119 +4,40 @@ import { useScrollReveal } from '../hooks/useScrollReveal'
 import AnimatedCard from './AnimatedCard'
 import RedactedReveal from './RedactedReveal'
 
-const rawKeywords = [
-  { text: 'const', color: '#569CD6' },
-  { text: 'let', color: '#569CD6' },
-  { text: 'var', color: '#569CD6' },
-  { text: 'function', color: '#DCDCAA' },
-  { text: 'return', color: '#569CD6' },
-  { text: 'class', color: '#4EC9B0' },
-  { text: 'extends', color: '#569CD6' },
-  { text: 'import', color: '#569CD6' },
-  { text: 'export', color: '#569CD6' },
-  { text: 'default', color: '#569CD6' },
-  { text: 'from', color: '#569CD6' },
-  { text: 'async', color: '#569CD6' },
-  { text: 'await', color: '#569CD6' },
-  { text: 'try', color: '#C586C0' },
-  { text: 'catch', color: '#C586C0' },
-  { text: 'throw', color: '#C586C0' },
-  { text: 'new', color: '#569CD6' },
-  { text: 'this', color: '#569CD6' },
-  { text: 'typeof', color: '#569CD6' },
-  { text: 'instanceof', color: '#569CD6' },
-  { text: 'if', color: '#C586C0' },
-  { text: 'else', color: '#C586C0' },
-  { text: 'for', color: '#C586C0' },
-  { text: 'while', color: '#C586C0' },
-  { text: 'do', color: '#C586C0' },
-  { text: 'switch', color: '#C586C0' },
-  { text: 'case', color: '#C586C0' },
-  { text: 'break', color: '#C586C0' },
-  { text: 'continue', color: '#C586C0' },
-  { text: 'true', color: '#569CD6' },
-  { text: 'false', color: '#569CD6' },
-  { text: 'null', color: '#569CD6' },
-  { text: 'undefined', color: '#569CD6' },
-  { text: 'void', color: '#569CD6' },
-  { text: 'interface', color: '#C586C0' },
-  { text: 'type', color: '#4EC9B0' },
-  { text: 'enum', color: '#C586C0' },
-  { text: 'implements', color: '#C586C0' },
-  { text: 'abstract', color: '#C586C0' },
-  { text: 'static', color: '#569CD6' },
-  { text: 'readonly', color: '#569CD6' },
-  { text: 'keyof', color: '#569CD6' },
-  { text: 'infer', color: '#569CD6' },
-  { text: 'never', color: '#569CD6' },
-  { text: 'unknown', color: '#569CD6' },
-  { text: 'any', color: '#569CD6' },
-  { text: 'Promise', color: '#4EC9B0' },
-  { text: 'Error', color: '#F44747' },
-  { text: 'Exception', color: '#F44747' },
-  { text: 'Map', color: '#4EC9B0' },
-  { text: 'Set', color: '#4EC9B0' },
-  { text: 'Array', color: '#4EC9B0' },
-  { text: 'Object', color: '#4EC9B0' },
-  { text: 'String', color: '#4EC9B0' },
-  { text: 'Number', color: '#4EC9B0' },
-  { text: 'Boolean', color: '#4EC9B0' },
-  { text: 'delete', color: '#569CD6' },
-  { text: 'in', color: '#569CD6' },
-  { text: 'of', color: '#569CD6' },
-  { text: 'get', color: '#569CD6' },
-  { text: 'set', color: '#569CD6' },
-  { text: 'yield', color: '#569CD6' },
-  { text: 'generator', color: '#DCDCAA' },
-  { text: 'module', color: '#569CD6' },
-  { text: 'namespace', color: '#569CD6' },
-  { text: 'package', color: '#569CD6' },
-  { text: 'private', color: '#C586C0' },
-  { text: 'protected', color: '#C586C0' },
-  { text: 'public', color: '#C586C0' },
-  { text: 'as', color: '#569CD6' },
-  { text: 'satisfies', color: '#569CD6' },
-]
-const keywords = rawKeywords.map(k => ({
-  ...k,
-  fontSize: 11 + Math.random() * 6,
-  opacity: 0.15 + Math.random() * 0.2,
+const BINARY_COUNT = 62
+const binaryDigits = Array.from({ length: BINARY_COUNT }, (_, i) => ({
+  digit: Math.random() > 0.5 ? '1' : '0',
+  opacity: 0.1 + Math.random() * 0.15,
 }))
 
 interface WordData {
-  text: string
-  color: string
+  digit: string
   x: number
   y: number
   vx: number
   vy: number
-  fontSize: number
   opacity: number
 }
 
-function initWord(keyword: typeof keywords[0], w: number, h: number): WordData {
+function initWord(bin: typeof binaryDigits[0], w: number, h: number): WordData {
   return {
-    text: keyword.text,
-    color: keyword.color,
+    digit: bin.digit,
     x: Math.random() * w,
     y: Math.random() * h,
     vx: (Math.random() - 0.5) * 0.4,
     vy: (Math.random() - 0.5) * 0.4,
-    fontSize: 11 + Math.random() * 6,
-    opacity: 0.15 + Math.random() * 0.2,
+    opacity: bin.opacity,
   }
 }
 
 export default function Projects() {
   const { ref, visible } = useScrollReveal(0.05)
+  const projects = data.portfolio
+  const totalSlides = 1 + projects.length
 
-  useEffect(() => {
-    data.portfolio.forEach(project => {
-      if (project.id === 'project-1') return
-      const urls: string[] = [project.image, project.imageHover, ...(project.images || [])].filter(Boolean) as string[]
-      urls.forEach(url => { const img = new Image(); img.src = url })
-    })
-  }, [])
+  const [activeSlide, setActiveSlide] = useState(0)
+  const sectionRef = useRef<HTMLElement>(null)
+  const trackRef = useRef<HTMLDivElement>(null)
 
   const [projectIndex, setProjectIndex] = useState(0)
   const [dismissing, setDismissing] = useState(false)
@@ -131,7 +52,89 @@ export default function Projects() {
   const wordRefs = useRef<(HTMLSpanElement | null)[]>([])
   const mouseRef = useRef({ x: -1000, y: -1000 })
   const wordsRef = useRef<WordData[]>([])
+  const imagePreloaded = useRef(false)
 
+  // Preload images once
+  useEffect(() => {
+    if (imagePreloaded.current) return
+    imagePreloaded.current = true
+    projects.forEach(project => {
+      if (project.id === 'project-1') return
+      const urls: string[] = [project.image, project.imageHover, ...(project.images || [])].filter(Boolean) as string[]
+      urls.forEach(url => { const img = new Image(); img.src = url })
+    })
+  }, [projects])
+
+  const starsRef = useRef<{ left: string; top: string; size: number; delay: string; dur: string }[]>([])
+
+  if (starsRef.current.length === 0) {
+    starsRef.current = Array.from({ length: 80 }).map(() => ({
+      left: `${Math.random() * 100}%`,
+      top: `${Math.random() * 100}%`,
+      size: 1 + Math.random() * 2.5,
+      delay: `${Math.random() * 6}s`,
+      dur: `${3 + Math.random() * 5}s`,
+    }))
+  }
+
+  const snapTimerRef = useRef<ReturnType<typeof setTimeout>>()
+  const snapCleanupRef = useRef<ReturnType<typeof setTimeout>>()
+
+  // Carousel scroll progress with snap on release
+  useEffect(() => {
+    const section = sectionRef.current
+    if (!section) return
+
+    const handleScroll = () => {
+      const rect = section.getBoundingClientRect()
+      const sectionHeight = section.offsetHeight
+      const viewportHeight = window.innerHeight
+      const scrollable = sectionHeight - viewportHeight
+      const scrolled = -rect.top
+      const p = Math.max(0, Math.min(1, scrollable > 0 ? scrolled / scrollable : 1))
+
+      const track = trackRef.current
+      if (!track) return
+
+      // Immediate transform during scroll (no transition)
+      track.style.transition = 'none'
+      const carouselEndP = (totalSlides - 1) / totalSlides
+      const carouselP = Math.min(p / carouselEndP, 1)
+      const translateX = -carouselP * (totalSlides - 1) * 100
+      track.style.transform = `translateX(${translateX}vw)`
+
+      const rawSlide = carouselP * (totalSlides - 1)
+      setActiveSlide(Math.round(rawSlide))
+
+      // Debounce: snap to nearest slide when scrolling stops
+      if (snapTimerRef.current) clearTimeout(snapTimerRef.current)
+      if (snapCleanupRef.current) clearTimeout(snapCleanupRef.current)
+
+      snapTimerRef.current = setTimeout(() => {
+        const nearestSlide = Math.round(rawSlide)
+        const snapP = nearestSlide / (totalSlides - 1)
+        const snapX = -snapP * (totalSlides - 1) * 100
+
+        track.style.transition = 'transform 0.5s cubic-bezier(0.22, 1, 0.36, 1)'
+        track.style.transform = `translateX(${snapX}vw)`
+        setActiveSlide(nearestSlide)
+
+        snapCleanupRef.current = setTimeout(() => {
+          track.style.transition = 'none'
+        }, 600)
+      }, 150)
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    handleScroll()
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+      if (snapTimerRef.current) clearTimeout(snapTimerRef.current)
+      if (snapCleanupRef.current) clearTimeout(snapCleanupRef.current)
+    }
+  }, [totalSlides])
+
+  // Swipe card observers
   useEffect(() => {
     const el = cardsContainerRef.current
     if (!el) return
@@ -165,6 +168,7 @@ export default function Projects() {
     return () => observer.disconnect()
   }, [])
 
+  // Arrow path
   useEffect(() => {
     const computeArrow = () => {
       const section = document.getElementById('projects')
@@ -189,7 +193,6 @@ export default function Projects() {
         points.push({ x: cx, y: cy })
       })
 
-      // Extend path past the last card down to the bottom of the section
       const sectionRect = section.getBoundingClientRect()
       const containerBottom = containerRect.bottom - containerRect.top
       const lastPt = points[points.length - 1]
@@ -199,7 +202,6 @@ export default function Projects() {
         (window.innerHeight - startRect.top) / (window.innerHeight + (sectionRect.bottom - startRect.top))
       ))
 
-      // Catmull-rom smooth cubic bezier through points
       const n = points.length
       let d = `M ${points[0].x} ${points[0].y}`
       for (let i = 0; i < n - 1; i++) {
@@ -233,14 +235,15 @@ export default function Projects() {
     return () => window.removeEventListener('scroll', computeArrow)
   }, [])
 
+  // Floating code words
   useEffect(() => {
     const container = cardsRef.current
     if (!container) return
     const rect = container.getBoundingClientRect()
     const w = rect.width
     const h = rect.height
-    wordsRef.current = keywords.map(k => initWord(k, w, h))
-    wordRefs.current = new Array(keywords.length)
+    wordsRef.current = binaryDigits.map(k => initWord(k, w, h))
+    wordRefs.current = new Array(binaryDigits.length)
 
     let raf: number
     const step = () => {
@@ -277,7 +280,6 @@ export default function Projects() {
         }
       }
 
-      // Word-word collisions
       for (let i = 0; i < words.length; i++) {
         for (let j = i + 1; j < words.length; j++) {
           const a = words[i]
@@ -324,6 +326,7 @@ export default function Projects() {
       setHovered(false)
     }, 400)
   }, [dismissing, beforeAfterProjects.length])
+
   const visibleCards = []
   const numVisible = Math.min(4, beforeAfterProjects.length)
   for (let i = 0; i < numVisible; i++) {
@@ -336,45 +339,213 @@ export default function Projects() {
   return (
     <section
       id="projects"
-      ref={ref}
+      ref={sectionRef}
       style={{
-        padding: '6rem 3rem',
+        position: 'relative',
         background: '#0a0a0a',
       }}
     >
+      {/* Horizontal carousel */}
+      <div
+        style={{
+          height: `${(totalSlides + 1) * 100}vh`,
+          position: 'relative',
+        }}
+      >
+        <div
+          style={{
+            position: 'sticky',
+            top: 0,
+            height: '100vh',
+            overflow: 'hidden',
+            display: 'flex',
+            alignItems: 'center',
+          }}
+        >
+          {/* Starry night background */}
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              background: 'linear-gradient(180deg, #0a0a2e 0%, #0a0a0a 100%)',
+              pointerEvents: 'none',
+              zIndex: 0,
+            }}
+          >
+            {starsRef.current.map((s, i) => (
+              <span
+                key={i}
+                className="star"
+                style={{
+                  position: 'absolute',
+                  left: s.left,
+                  top: s.top,
+                  width: s.size,
+                  height: s.size,
+                  borderRadius: '50%',
+                  background: '#fff',
+                  animationDelay: s.delay,
+                  animationDuration: s.dur,
+                }}
+              />
+            ))}
+          </div>
+          <div
+            ref={trackRef}
+            style={{
+              display: 'flex',
+              height: '100%',
+              width: '100%',
+              position: 'relative',
+              zIndex: 1,
+            }}
+          >
+            {/* Header slide */}
+            <div
+              style={{
+                minWidth: '100vw',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '3rem',
+              }}
+            >
+              <div
+                ref={ref}
+                style={{
+                  maxWidth: 1200,
+                  margin: '0 auto',
+                  width: '100%',
+                  transition: 'all 0.8s cubic-bezier(0.65, 0, 0.35, 1)',
+                  transform: visible ? 'translateY(0)' : 'translateY(40px)',
+                  opacity: visible ? 1 : 0,
+                }}
+              >
+                <div
+                  style={{
+                    width: 40,
+                    height: 3,
+                    background: '#d2ff00',
+                    borderRadius: 2,
+                    marginBottom: '1rem',
+                  }}
+                />
+                <RedactedReveal
+                  lines={['Featured', 'Projects']}
+                  as="h2"
+                  stagger={250}
+                  style={{
+                    fontSize: 'clamp(2rem, 4vw, 3.5rem)',
+                    fontWeight: 700,
+                    color: '#fff',
+                    lineHeight: 1.2,
+                  }}
+                  highlightIndex={1}
+                  highlightColor="#d2ff00"
+                />
+                <RedactedReveal
+                  lines={[
+                    'Modern apps, websites, and data analytics',
+                    'built for Africa.',
+                  ]}
+                  as="p"
+                  stagger={200}
+                  style={{
+                    color: 'rgba(255,255,255,0.5)',
+                    fontSize: 'clamp(0.9rem, 1.5vw, 1.05rem)',
+                    lineHeight: 1.6,
+                    marginTop: '0.75rem',
+                    maxWidth: 520,
+                  }}
+                  barColor="rgba(210,255,0,0.3)"
+                />
+              </div>
+            </div>
+
+            {/* Project slides */}
+            {projects.map((project, i) => (
+              <div
+                key={project.id}
+                style={{
+                  minWidth: '100vw',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  padding: '3rem',
+                }}
+              >
+                <div
+                  style={{
+                    maxWidth: 1200,
+                    margin: '0 auto',
+                    width: '100%',
+                    position: 'relative',
+                    zIndex: 1,
+                  }}
+                >
+                  <AnimatedCard
+                    title={project.title}
+                    description={project.description}
+                    tags={project.tech}
+                    image={project.image}
+                    imageHover={project.imageHover}
+                    images={project.images}
+                    video={project.video}
+                    appStore={project.appStore}
+                    playStore={project.playStore}
+                    url={project.url}
+                    color={project.color}
+                    index={i}
+                    cardIndex={i}
+                    phoneCollage={project.id === 'project-1'}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Navigation dots */}
+          <div
+            style={{
+              position: 'absolute',
+              bottom: '2rem',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              display: 'flex',
+              gap: '0.6rem',
+              zIndex: 10,
+            }}
+          >
+            {Array.from({ length: totalSlides }).map((_, i) => (
+              <button
+                key={i}
+                style={{
+                  width: i === activeSlide ? 24 : 8,
+                  height: 8,
+                  borderRadius: 4,
+                  border: 'none',
+                  background: i === activeSlide ? '#d2ff00' : 'rgba(255,255,255,0.2)',
+                  cursor: 'pointer',
+                  padding: 0,
+                  transition: 'all 0.3s cubic-bezier(0.65, 0, 0.35, 1)',
+                }}
+                aria-label={`Go to slide ${i}`}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Before & After Swipe Cards */}
       <div
         data-projects-container
         style={{
           maxWidth: 1200,
           margin: '0 auto',
+          padding: '6rem 3rem',
           position: 'relative',
-          transition: 'all 0.8s cubic-bezier(0.65, 0, 0.35, 1)',
-          transform: visible ? 'translateY(0)' : 'translateY(40px)',
-          opacity: visible ? 1 : 0,
         }}
       >
-        <div
-          style={{
-            width: 40,
-            height: 3,
-            background: '#d2ff00',
-            borderRadius: 2,
-            marginBottom: '1rem',
-          }}
-        />
-        <RedactedReveal
-          lines={['Featured', 'Projects']}
-          as="h2"
-          stagger={250}
-          style={{
-            fontSize: 'clamp(2rem, 4vw, 3.5rem)',
-            fontWeight: 700,
-            color: '#fff',
-            lineHeight: 1.2,
-          }}
-          highlightIndex={1}
-          highlightColor="#d2ff00"
-        />
         <span
           data-projects-path-start
           style={{
@@ -388,47 +559,7 @@ export default function Projects() {
           }}
           aria-hidden
         />
-        <RedactedReveal
-          lines={[
-            'Modern apps, websites, and data analytics',
-            'built for Africa.',
-          ]}
-          as="p"
-          stagger={200}
-          style={{
-            color: 'rgba(255,255,255,0.5)',
-            fontSize: 'clamp(0.9rem, 1.5vw, 1.05rem)',
-            lineHeight: 1.6,
-            marginTop: '0.75rem',
-            maxWidth: 520,
-          }}
-          barColor="rgba(210,255,0,0.3)"
-        />
 
-        {/* Animated Cards - scroll reveal */}
-        <div ref={cardsContainerRef} style={{ marginTop: '3rem' }}>
-          {data.portfolio.map((project, i) => (
-            <AnimatedCard
-              key={project.id}
-              title={project.title}
-              description={project.description}
-              tags={project.tech}
-              image={project.image}
-              imageHover={project.imageHover}
-              images={project.images}
-              video={project.video}
-              appStore={project.appStore}
-              playStore={project.playStore}
-              url={project.url}
-              color={project.color}
-              index={i}
-              cardIndex={i}
-              phoneCollage={project.id === 'project-1'}
-            />
-          ))}
-        </div>
-
-        {/* Scroll-driven arrow that hops through cards */}
         <svg
           style={{
             position: 'absolute',
@@ -469,319 +600,331 @@ export default function Projects() {
           )}
         </svg>
 
-        {/* Tinder-like Swipe Cards */}
-        <div
-          ref={cardsRef}
-          style={{ marginTop: '6rem', position: 'relative', overflow: 'hidden' }}
-          onMouseMove={(e) => {
-            const rect = cardsRef.current?.getBoundingClientRect()
-            if (rect) {
-              mouseRef.current = {
-                x: e.clientX - rect.left,
-                y: e.clientY - rect.top,
+        <div ref={cardsContainerRef} style={{ marginTop: '3rem' }}>
+          <div
+            ref={cardsRef}
+            style={{ position: 'relative', overflow: 'hidden' }}
+            onMouseMove={(e) => {
+              const rect = cardsRef.current?.getBoundingClientRect()
+              if (rect) {
+                mouseRef.current = {
+                  x: e.clientX - rect.left,
+                  y: e.clientY - rect.top,
+                }
               }
-            }
-          }}
-          onMouseLeave={() => {
-            mouseRef.current = { x: -1000, y: -1000 }
-          }}
-        >
-          {keywords.map((kw, i) => (
-            <span
-              key={i}
-              ref={el => { wordRefs.current[i] = el }}
-              style={{
-                position: 'absolute',
-                left: 0,
-                top: 0,
-                transform: 'translate(0, 0)',
-                fontSize: `${kw.fontSize}px`,
-                fontWeight: 600,
-                fontFamily: "'Fira Code', 'JetBrains Mono', 'Cascadia Code', monospace",
-                color: kw.color,
-                opacity: kw.opacity,
-                pointerEvents: 'none',
-                zIndex: 1,
-                userSelect: 'none',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              {kw.text}
-            </span>
-          ))}
-          <div
-            style={{
-              width: 40,
-              height: 3,
-              background: '#d2ff00',
-              borderRadius: 2,
-              marginBottom: '1rem',
             }}
-          />
-          <h3
-            style={{
-              fontSize: 'clamp(1.5rem, 3vw, 2.5rem)',
-              fontWeight: 700,
-              color: '#fff',
-              margin: 0,
+            onMouseLeave={() => {
+              mouseRef.current = { x: -1000, y: -1000 }
             }}
           >
-            <span style={{ color: '#d2ff00' }}>Before</span> &{' '}
-            <span style={{ color: '#d2ff00' }}>After</span>
-          </h3>
-          <p
-            style={{
-              color: 'rgba(255,255,255,0.5)',
-              fontSize: 'clamp(0.85rem, 1.3vw, 1rem)',
-              lineHeight: 1.6,
-              marginTop: '0.5rem',
-              maxWidth: 560,
-            }}
-          >
-            We modernise outdated business websites into stunning experiences that reflect who they are — their brand, their culture, and what they do.
-          </p>
-
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginTop: '2rem',
-              perspective: 1200,
-            }}
-          >
+            {binaryDigits.map((_, i) => (
+              <span
+                key={i}
+                ref={el => { wordRefs.current[i] = el }}
+                style={{
+                  position: 'absolute',
+                  left: 0,
+                  top: 0,
+                  transform: 'translate(0, 0)',
+                  width: 24,
+                  height: 24,
+                  borderRadius: 20,
+                  background: 'rgba(210, 255, 0, 0.04)',
+                  border: '1px solid rgba(210, 255, 0, 0.1)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: 14,
+                  fontWeight: 700,
+                  fontFamily: "'Fira Code', 'JetBrains Mono', 'Cascadia Code', monospace",
+                  color: '#d2ff00',
+                  opacity: wordsRef.current[i]?.opacity ?? 0.15,
+                  pointerEvents: 'none',
+                  zIndex: 1,
+                  userSelect: 'none',
+                }}
+              >
+                {wordsRef.current[i]?.digit}
+              </span>
+            ))}
             <div
               style={{
-                position: 'relative',
-                width: '100%',
-                maxWidth: 820,
-                aspectRatio: '1.6 / 1',
+                width: 40,
+                height: 3,
+                background: '#d2ff00',
+                borderRadius: 2,
+                marginBottom: '1rem',
+              }}
+            />
+            <h3
+              style={{
+                fontSize: 'clamp(1.5rem, 3vw, 2.5rem)',
+                fontWeight: 700,
+                color: '#fff',
+                margin: 0,
               }}
             >
-              {visibleCards.map(({ project, stackIndex }) => {
-                const isTop = stackIndex === 0
-                const offset = stackIndex * 12
-                const scale = 1 - stackIndex * 0.03
-                const rot = stackIndex * 1.5
-                const isEntering = cardsRevealed && !cardEntryDone
-                const staggerDelay = (numVisible - 1 - stackIndex) * (1.5 / numVisible)
+              <span style={{ color: '#d2ff00' }}>Before</span> &{' '}
+              <span style={{ color: '#d2ff00' }}>After</span>
+            </h3>
+            <p
+              style={{
+                color: 'rgba(255,255,255,0.5)',
+                fontSize: 'clamp(0.85rem, 1.3vw, 1rem)',
+                lineHeight: 1.6,
+                marginTop: '0.5rem',
+                maxWidth: 560,
+              }}
+            >
+              We modernise outdated business websites into stunning experiences that reflect who they are — their brand, their culture, and what they do.
+            </p>
 
-                const entryTransform = `translateY(${offset + 60}px) scale(${scale}) rotate(${rot}deg)`
-                const finalTransform = `translateY(${offset}px) scale(${scale}) rotate(${rot}deg)`
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginTop: '2rem',
+                perspective: 1200,
+              }}
+            >
+              <div
+                style={{
+                  position: 'relative',
+                  width: '100%',
+                  maxWidth: 820,
+                  aspectRatio: '1.6 / 1',
+                }}
+              >
+                {visibleCards.map(({ project, stackIndex }) => {
+                  const isTop = stackIndex === 0
+                  const offset = stackIndex * 12
+                  const scale = 1 - stackIndex * 0.03
+                  const rot = stackIndex * 1.5
+                  const isEntering = cardsRevealed && !cardEntryDone
+                  const staggerDelay = (numVisible - 1 - stackIndex) * (1.5 / numVisible)
 
-                return (
-                  <div
-                    key={`${projectIndex}-${project.id}`}
-                    style={{
-                      position: 'absolute',
-                      inset: 0,
-                      width: '100%',
-                      height: '100%',
-                      borderRadius: 16,
-                      overflow: 'hidden',
-                      background: '#111',
-                      border: '2px solid #d2ff00',
-                      boxShadow: isTop
-                        ? '0 20px 60px rgba(0,0,0,0.5)'
-                        : '0 8px 30px rgba(0,0,0,0.4)',
-                      transform: cardsRevealed ? finalTransform : entryTransform,
-                      opacity: cardsRevealed ? (dismissing && isTop ? 0 : 1) : 0,
-                      transition: isEntering
-                        ? `transform 0.5s cubic-bezier(0.65, 0, 0.35, 1) ${staggerDelay}s, opacity 0.5s ease ${staggerDelay}s`
-                        : dismissing
-                          ? 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s ease'
-                          : 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease',
-                      cursor: isTop ? 'pointer' : 'default',
-                      zIndex: 10 - stackIndex,
-                      pointerEvents: isTop ? 'auto' : 'none',
-                      userSelect: 'none',
-                    }}
-                    className={isTop && dismissing ? 'swipe-dismiss' : ''}
-                    onClick={isTop ? dismiss : undefined}
-                    onMouseEnter={isTop ? () => setHovered(true) : undefined}
-                    onMouseLeave={isTop ? () => setHovered(false) : undefined}
-                  >
-                    {/* Default image */}
-                    <img
-                      src={project.image}
-                      alt={project.title}
+                  const entryTransform = `translateY(${offset + 60}px) scale(${scale}) rotate(${rot}deg)`
+                  const finalTransform = `translateY(${offset}px) scale(${scale}) rotate(${rot}deg)`
+
+                  return (
+                    <div
+                      key={`${projectIndex}-${project.id}`}
                       style={{
                         position: 'absolute',
                         inset: 0,
                         width: '100%',
                         height: '100%',
-                        objectFit: 'cover',
-                        opacity: isTop && hovered ? 0 : 1,
-                        transform: isTop && hovered ? 'scale(0.95)' : 'scale(1)',
-                        transition: isTop
-                          ? 'opacity 0.6s cubic-bezier(0.65, 0, 0.35, 1), transform 0.6s cubic-bezier(0.65, 0, 0.35, 1)'
-                          : 'none',
+                        borderRadius: 16,
+                        overflow: 'hidden',
+                        background: '#111',
+                        border: '2px solid #d2ff00',
+                        boxShadow: isTop
+                          ? '0 20px 60px rgba(0,0,0,0.5)'
+                          : '0 8px 30px rgba(0,0,0,0.4)',
+                        transform: cardsRevealed ? finalTransform : entryTransform,
+                        opacity: cardsRevealed ? (dismissing && isTop ? 0 : 1) : 0,
+                        transition: isEntering
+                          ? `transform 0.5s cubic-bezier(0.65, 0, 0.35, 1) ${staggerDelay}s, opacity 0.5s ease ${staggerDelay}s`
+                          : dismissing
+                            ? 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s ease'
+                            : 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease',
+                        cursor: isTop ? 'pointer' : 'default',
+                        zIndex: 10 - stackIndex,
+                        pointerEvents: isTop ? 'auto' : 'none',
+                        userSelect: 'none',
                       }}
-                    />
-                    {/* Hover image */}
-                    <img
-                      src={project.imageHover}
-                      alt={`${project.title} hover`}
-                      style={{
-                        position: 'absolute',
-                        inset: 0,
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'cover',
-                        opacity: isTop && hovered ? 1 : 0,
-                        transform: isTop && hovered ? 'scale(1)' : 'scale(1.1)',
-                        transition: isTop
-                          ? 'opacity 0.6s cubic-bezier(0.65, 0, 0.35, 1), transform 0.6s cubic-bezier(0.65, 0, 0.35, 1)'
-                          : 'none',
-                      }}
-                    />
-                    {/* Gradient overlay */}
-                    <div
-                      style={{
-                        position: 'absolute',
-                        inset: 0,
-                        background: 'linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 50%)',
-                        opacity: isTop && hovered ? 1 : 0,
-                        transition: isTop ? 'opacity 0.4s' : 'none',
-                        pointerEvents: 'none',
-                      }}
-                    />
-
-                    {/* Click to swipe hint */}
-                    <div
-                      style={{
-                        position: 'absolute',
-                        top: '1.25rem',
-                        left: '1.25rem',
-                        zIndex: 2,
-                        opacity: isTop && !hovered ? 0.7 : 0,
-                        transition: isTop ? 'opacity 0.4s' : 'none',
-                      }}
+                      className={isTop && dismissing ? 'swipe-dismiss' : ''}
+                      onClick={isTop ? dismiss : undefined}
+                      onMouseEnter={isTop ? () => setHovered(true) : undefined}
+                      onMouseLeave={isTop ? () => setHovered(false) : undefined}
                     >
-                      <span
+                      <img
+                        src={project.image}
+                        alt={project.title}
                         style={{
-                          color: '#fff',
-                          fontSize: '0.75rem',
-                          fontWeight: 600,
-                          letterSpacing: '0.08em',
-                          textTransform: 'uppercase',
-                          textShadow: '0 2px 8px rgba(0,0,0,0.6)',
-                          background: 'rgba(0,0,0,0.4)',
-                          padding: '0.35rem 0.85rem',
-                          borderRadius: 100,
-                          border: '1px solid rgba(255,255,255,0.15)',
+                          position: 'absolute',
+                          inset: 0,
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover',
+                          opacity: isTop && hovered ? 0 : 1,
+                          transform: isTop && hovered ? 'scale(0.95)' : 'scale(1)',
+                          transition: isTop
+                            ? 'opacity 0.6s cubic-bezier(0.65, 0, 0.35, 1), transform 0.6s cubic-bezier(0.65, 0, 0.35, 1)'
+                            : 'none',
+                        }}
+                      />
+                      <img
+                        src={project.imageHover}
+                        alt={`${project.title} hover`}
+                        style={{
+                          position: 'absolute',
+                          inset: 0,
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover',
+                          opacity: isTop && hovered ? 1 : 0,
+                          transform: isTop && hovered ? 'scale(1)' : 'scale(1.1)',
+                          transition: isTop
+                            ? 'opacity 0.6s cubic-bezier(0.65, 0, 0.35, 1), transform 0.6s cubic-bezier(0.65, 0, 0.35, 1)'
+                            : 'none',
+                        }}
+                      />
+                      <div
+                        style={{
+                          position: 'absolute',
+                          inset: 0,
+                          background: 'linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 50%)',
+                          opacity: isTop && hovered ? 1 : 0,
+                          transition: isTop ? 'opacity 0.4s' : 'none',
+                          pointerEvents: 'none',
+                        }}
+                      />
+
+                      <div
+                        style={{
+                          position: 'absolute',
+                          top: '1.25rem',
+                          left: '1.25rem',
+                          zIndex: 2,
+                          opacity: isTop && !hovered ? 0.7 : 0,
+                          transition: isTop ? 'opacity 0.4s' : 'none',
                         }}
                       >
-                        click to swipe
-                      </span>
-                    </div>
+                        <span
+                          style={{
+                            color: '#fff',
+                            fontSize: '0.75rem',
+                            fontWeight: 600,
+                            letterSpacing: '0.08em',
+                            textTransform: 'uppercase',
+                            textShadow: '0 2px 8px rgba(0,0,0,0.6)',
+                            background: 'rgba(0,0,0,0.4)',
+                            padding: '0.35rem 0.85rem',
+                            borderRadius: 100,
+                            border: '1px solid rgba(255,255,255,0.15)',
+                          }}
+                        >
+                          click to swipe
+                        </span>
+                      </div>
 
-                    {/* Title badge */}
-                    <div
-                      style={{
-                        position: 'absolute',
-                        bottom: '1.5rem',
-                        left: '1.5rem',
-                        zIndex: 2,
-                        opacity: isTop ? 1 : 0,
-                        transition: isTop ? 'opacity 0.4s 0.1s' : 'none',
-                      }}
-                    >
-                      <p
+                      <div
                         style={{
-                          color: 'rgba(255,255,255,0.8)',
-                          fontSize: '1rem',
-                          fontWeight: 600,
-                          textShadow: '0 2px 8px rgba(0,0,0,0.5)',
+                          position: 'absolute',
+                          bottom: '1.5rem',
+                          left: '1.5rem',
+                          zIndex: 2,
+                          opacity: isTop ? 1 : 0,
+                          transition: isTop ? 'opacity 0.4s 0.1s' : 'none',
                         }}
                       >
-                        {project.title}
-                      </p>
-                    </div>
+                        <p
+                          style={{
+                            color: 'rgba(255,255,255,0.8)',
+                            fontSize: '1rem',
+                            fontWeight: 600,
+                            textShadow: '0 2px 8px rgba(0,0,0,0.5)',
+                          }}
+                        >
+                          {project.title}
+                        </p>
+                      </div>
 
-                    {/* After / Before chip */}
-                    <div
-                      style={{
-                        position: 'absolute',
-                        bottom: '1.5rem',
-                        right: '1.5rem',
-                        zIndex: 2,
-                        opacity: isTop ? 1 : 0,
-                        transition: isTop ? 'opacity 0.4s 0.1s' : 'none',
-                      }}
-                    >
-                      <span
+                      <div
                         style={{
-                          display: 'inline-block',
-                          padding: '0.35rem 0.85rem',
-                          borderRadius: 100,
-                          background: '#d2ff00',
-                          color: '#0a0a0a',
-                          fontSize: '0.75rem',
-                          fontWeight: 700,
-                          letterSpacing: '0.06em',
-                          textTransform: 'uppercase',
+                          position: 'absolute',
+                          bottom: '1.5rem',
+                          right: '1.5rem',
+                          zIndex: 2,
+                          opacity: isTop ? 1 : 0,
+                          transition: isTop ? 'opacity 0.4s 0.1s' : 'none',
                         }}
                       >
-                        {hovered ? 'Before' : 'After'}
-                      </span>
-                    </div>
+                        <span
+                          style={{
+                            display: 'inline-block',
+                            padding: '0.35rem 0.85rem',
+                            borderRadius: 100,
+                            background: '#d2ff00',
+                            color: '#0a0a0a',
+                            fontSize: '0.75rem',
+                            fontWeight: 700,
+                            letterSpacing: '0.06em',
+                            textTransform: 'uppercase',
+                          }}
+                        >
+                          {hovered ? 'Before' : 'After'}
+                        </span>
+                      </div>
 
-                    {/* Stack number */}
-                    <div
-                      style={{
-                        position: 'absolute',
-                        top: '1.25rem',
-                        right: '1.25rem',
-                        zIndex: 2,
-                        opacity: isTop ? 0.4 : 0.15,
-                      }}
-                    >
-                      <span
+                      <div
                         style={{
-                          color: '#fff',
-                          fontSize: '2rem',
-                          fontWeight: 700,
+                          position: 'absolute',
+                          top: '1.25rem',
+                          right: '1.25rem',
+                          zIndex: 2,
+                          opacity: isTop ? 0.4 : 0.15,
                         }}
                       >
-                        {(projectIndex + stackIndex + 1).toString().padStart(2, '0')}
-                      </span>
+                        <span
+                          style={{
+                            color: '#fff',
+                            fontSize: '2rem',
+                            fontWeight: 700,
+                          }}
+                        >
+                          {(projectIndex + stackIndex + 1).toString().padStart(2, '0')}
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                )
-              })}
+                  )
+                })}
+              </div>
             </div>
           </div>
-
-          <style>{`
-            .swipe-dismiss {
-              transform: translateX(120%) rotate(16deg) !important;
-              opacity: 0 !important;
-              transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s ease !important;
-            }
-            @keyframes bird-flap-l {
-              0%, 100% { transform: rotate(-35deg); }
-              50% { transform: rotate(25deg); }
-            }
-            @keyframes bird-flap-r {
-              0%, 100% { transform: rotate(35deg); }
-              50% { transform: rotate(-25deg); }
-            }
-            @keyframes bird-dangle-l {
-              0%, 100% { transform: rotate(12deg); }
-              50% { transform: rotate(-12deg); }
-            }
-            @keyframes bird-dangle-r {
-              0%, 100% { transform: rotate(-12deg); }
-              50% { transform: rotate(12deg); }
-            }
-            .bird-wing-l { animation: bird-flap-l 0.3s ease-in-out infinite; }
-            .bird-wing-r { animation: bird-flap-r 0.3s ease-in-out infinite; }
-            .bird-leg-l { animation: bird-dangle-l 0.5s ease-in-out infinite; }
-            .bird-leg-r { animation: bird-dangle-r 0.5s ease-in-out infinite; }
-          `}</style>
         </div>
       </div>
+
+      <style>{`
+        .star {
+          animation-name: twinkle;
+          animation-timing-function: ease-in-out;
+          animation-iteration-count: infinite;
+          animation-direction: alternate;
+        }
+        @keyframes twinkle {
+          0% { opacity: 0.1; transform: scale(0.5); }
+          50% { opacity: 0.8; }
+          100% { opacity: 0.2; transform: scale(1.2); }
+        }
+        .swipe-dismiss {
+          transform: translateX(120%) rotate(16deg) !important;
+          opacity: 0 !important;
+          transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s ease !important;
+        }
+        @keyframes bird-flap-l {
+          0%, 100% { transform: rotate(-35deg); }
+          50% { transform: rotate(25deg); }
+        }
+        @keyframes bird-flap-r {
+          0%, 100% { transform: rotate(35deg); }
+          50% { transform: rotate(-25deg); }
+        }
+        @keyframes bird-dangle-l {
+          0%, 100% { transform: rotate(12deg); }
+          50% { transform: rotate(-12deg); }
+        }
+        @keyframes bird-dangle-r {
+          0%, 100% { transform: rotate(-12deg); }
+          50% { transform: rotate(12deg); }
+        }
+        .bird-wing-l { animation: bird-flap-l 0.3s ease-in-out infinite; }
+        .bird-wing-r { animation: bird-flap-r 0.3s ease-in-out infinite; }
+        .bird-leg-l { animation: bird-dangle-l 0.5s ease-in-out infinite; }
+        .bird-leg-r { animation: bird-dangle-r 0.5s ease-in-out infinite; }
+      `}</style>
     </section>
   )
 }
