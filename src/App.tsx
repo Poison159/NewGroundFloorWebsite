@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 import Header from './components/Header'
 import Loader from './components/Loader'
 import Hero from './components/Hero'
@@ -16,9 +16,15 @@ export default function App() {
   const [loading, setLoading] = useState(true)
   const [cursorEnabled, setCursorEnabled] = useState(false)
   const [cubeProgress, setCubeProgress] = useState(0)
+  const [loopPhase, setLoopPhase] = useState<'idle' | 'closing' | 'opening'>('idle')
+  const loopPhaseRef = useRef(loopPhase)
+  loopPhaseRef.current = loopPhase
   const activeSection = useActiveSection()
 
   useEffect(() => {
+    let reachedBottom = false
+    let loopTimer: ReturnType<typeof setTimeout>
+
     const handleScroll = () => {
       const hero = document.getElementById('hero')
       const work = document.getElementById('work')
@@ -33,11 +39,30 @@ export default function App() {
       const end = workTop - windowHeight * 0.3
       const raw = (scrollY - start) / (end - start)
       setCubeProgress(Math.max(0, Math.min(1.3, raw)))
+
+      const scrollBottom = scrollY + windowHeight
+      const docHeight = document.documentElement.scrollHeight
+      if (scrollBottom >= docHeight - 5 && !reachedBottom && loopPhaseRef.current === 'idle') {
+        reachedBottom = true
+        setLoopPhase('closing')
+        loopTimer = setTimeout(() => {
+          window.scrollTo(0, 0)
+          setLoopPhase('opening')
+          loopTimer = setTimeout(() => {
+            setLoopPhase('idle')
+          }, 700)
+        }, 700)
+      } else if (scrollBottom < docHeight - 5) {
+        reachedBottom = false
+      }
     }
 
     window.addEventListener('scroll', handleScroll, { passive: true })
     handleScroll()
-    return () => window.removeEventListener('scroll', handleScroll)
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+      clearTimeout(loopTimer)
+    }
   }, [])
 
   const handleLoaderComplete = useCallback(() => {
@@ -67,6 +92,21 @@ export default function App() {
         <Contact />
       </main>
 
+      <div
+        style={{
+          position: 'fixed',
+          inset: 0,
+          zIndex: 9999,
+          background: '#0a0a0a',
+          clipPath: loopPhase === 'idle'
+            ? 'circle(0% at 50% 50%)'
+            : 'circle(150% at 50% 50%)',
+          transition: loopPhase === 'idle'
+            ? 'none'
+            : 'clip-path 0.7s cubic-bezier(0.65, 0, 0.35, 1)',
+          pointerEvents: 'none',
+        }}
+      />
       <footer
         style={{
           padding: '2rem 3rem',
