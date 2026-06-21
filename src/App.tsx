@@ -23,6 +23,7 @@ export default function App() {
 
   useEffect(() => {
     let reachedBottom = false
+    let reachedTop = false
     let loopTimer: ReturnType<typeof setTimeout>
 
     const handleScroll = () => {
@@ -42,6 +43,21 @@ export default function App() {
 
       const scrollBottom = scrollY + windowHeight
       const docHeight = document.documentElement.scrollHeight
+
+      if (scrollY <= 5 && !reachedTop && loopPhaseRef.current === 'idle') {
+        reachedTop = true
+        setLoopPhase('closing')
+        loopTimer = setTimeout(() => {
+          window.scrollTo(0, docHeight)
+          setLoopPhase('opening')
+          loopTimer = setTimeout(() => {
+            setLoopPhase('idle')
+          }, 700)
+        }, 700)
+      } else if (scrollY > 5) {
+        reachedTop = false
+      }
+
       if (scrollBottom >= docHeight - 5 && !reachedBottom && loopPhaseRef.current === 'idle') {
         reachedBottom = true
         setLoopPhase('closing')
